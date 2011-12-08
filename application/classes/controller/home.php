@@ -5,7 +5,6 @@ class Controller_Home extends Controller_Base
 
 	public function action_index()
 	{
-
 	}
 
 }
