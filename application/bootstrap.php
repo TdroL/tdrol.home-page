@@ -19,32 +19,32 @@ else
 /**
  * Set the default time zone.
  *
- * @see  http://kohanaframework.org/guide/using.configuration
- * @see  http://php.net/timezones
+ * @link  http://kohanaframework.org/guide/using.configuration
+ * @link  http://php.net/timezones
  */
-date_default_timezone_set('America/Chicago');
+date_default_timezone_set('Europe/Warsaw');
 
 /**
  * Set the default locale.
  *
- * @see  http://kohanaframework.org/guide/using.configuration
- * @see  http://php.net/setlocale
+ * @link  http://kohanaframework.org/guide/using.configuration
+ * @link  http://php.net/setlocale
  */
-setlocale(LC_ALL, 'en_US.utf-8');
+setlocale(LC_ALL, 'pl_PL.utf-8');
 
 /**
  * Enable the Kohana auto-loader.
  *
- * @see  http://kohanaframework.org/guide/using.autoloading
- * @see  http://php.net/spl_autoload_register
+ * @link  http://kohanaframework.org/guide/using.autoloading
+ * @link  http://php.net/spl_autoload_register
  */
 spl_autoload_register(array('Kohana', 'auto_load'));
 
 /**
  * Enable the Kohana auto-loader for unserialization.
  *
- * @see  http://php.net/spl_autoload_call
- * @see  http://php.net/manual/var.configuration.php#unserialize-callback-func
+ * @link  http://php.net/spl_autoload_call
+ * @link  http://php.net/manual/var.configuration.php#unserialize-callback-func
  */
 ini_set('unserialize_callback_func', 'spl_autoload_call');
 
@@ -53,7 +53,7 @@ ini_set('unserialize_callback_func', 'spl_autoload_call');
 /**
  * Set the default language
  */
-I18n::lang('en-us');
+I18n::lang('pl');
 
 /**
  * Set Kohana::$environment if a 'KOHANA_ENV' environment variable has been supplied.
@@ -61,10 +61,7 @@ I18n::lang('en-us');
  * Note: If you supply an invalid environment name, a PHP warning will be thrown
  * saying "Couldn't find constant Kohana::<INVALID_ENV_NAME>"
  */
-if (isset($_SERVER['KOHANA_ENV']))
-{
-	Kohana::$environment = constant('Kohana::'.strtoupper($_SERVER['KOHANA_ENV']));
-}
+Kohana::$environment = constant('Kohana::'.strtoupper(Arr::get($_SERVER, 'KOHANA_ENV', 'production')));
 
 /**
  * Initialize Kohana, setting the default options.
@@ -80,7 +77,13 @@ if (isset($_SERVER['KOHANA_ENV']))
  * - boolean  caching     enable or disable internal caching                 FALSE
  */
 Kohana::init(array(
-	'base_url'   => '/',
+	'base_url'   => (Kohana::$environment == Kohana::PRODUCTION)
+					? '/'
+					: '/sites/kohana-base/',
+	'index_file' => FALSE,
+	'profile'    => Kohana::$environment != Kohana::PRODUCTION,
+	'caching'    => Kohana::$environment == Kohana::PRODUCTION,
+	'errors'     => Kohana::$environment != Kohana::PRODUCTION
 ));
 
 /**
@@ -97,22 +100,64 @@ Kohana::$config->attach(new Config_File);
  * Enable modules. Modules are referenced by a relative or absolute path.
  */
 Kohana::modules(array(
-	// 'auth'       => MODPATH.'auth',       // Basic authentication
-	// 'cache'      => MODPATH.'cache',      // Caching with multiple backends
-	// 'codebench'  => MODPATH.'codebench',  // Benchmarking tool
-	// 'database'   => MODPATH.'database',   // Database access
-	// 'image'      => MODPATH.'image',      // Image manipulation
-	// 'orm'        => MODPATH.'orm',        // Object Relationship Mapping
-	// 'unittest'   => MODPATH.'unittest',   // Unit testing
-	// 'userguide'  => MODPATH.'userguide',  // User guide and API documentation
+	'bonafide'        => MODPATH.'bonafide',        // Bonafide
+	'cache'           => MODPATH.'cache',           // Cache
+	'database-sqlite' => MODPATH.'database-sqlite', // SQLite driver
+	'database'        => MODPATH.'database',        // Database access
+	'orm'             => MODPATH.'orm',             // ORM
+	'kostache'        => MODPATH.'kostache',        // KOstache
+	'yaminify'        => MODPATH.'yaminify',        // Yaminify
+	'yaminify-assets' => MODPATH.'yaminify-assets', // Yaminify - Asset bridge
+	'assets'          => MODPATH.'assets',          // Asset
+	'minion'          => MODPATH.'minion',          // Minion
+	// 'image'           => MODPATH.'image',           // Image manipulation
+	// 'userguide'       => MODPATH.'userguide',       // Userguide
+	// 'unittest'        => MODPATH.'unittest',        // Unit testing
 	));
+
+/**
+ * Set custom exception handler
+ */
+set_exception_handler(array('Controller_Base', 'exception_handler'));
+
+/**
+ * Set the cookies salt
+ */
+Cookie::$salt = '<random-hash>';
+
+/**
+ * Make cookies inaccessible to Javascript
+ */
+Cookie::$httponly = TRUE;
+
+/**
+ * Database configuration set
+ */
+Database::$default = (Kohana::$environment == Kohana::PRODUCTION)
+					? 'production'
+					: 'development';
+
+//Session::$default = 'database';
 
 /**
  * Set the routes. Each route must have a minimum of a name, a URI and a set of
  * defaults for the URI.
  */
-Route::set('default', '(<controller>(/<action>(/<id>)))')
-	->defaults(array(
-		'controller' => 'welcome',
-		'action'     => 'index',
-	));
+if ( ! Route::cache())
+{
+	Route::set('login', 'login(/<redirect>)', array(
+			'redirect' => '.+'
+		))
+		->defaults(array(
+			'controller' => 'home',
+			'action'     => 'login',
+		));
+
+	Route::set('default', '(<controller>(/<action>(/<id>)))')
+		->defaults(array(
+			'controller' => 'home',
+			'action'     => 'index',
+		));
+
+	Route::cache(Kohana::$caching);
+}

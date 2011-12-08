@@ -1,9 +1,6 @@
 [submodule "system"]
 	path = system
 	url = http://github.com/kohana/core.git
-[submodule "modules/codebench"]
-	path = modules/codebench
-	url = http://github.com/kohana/codebench.git
 [submodule "modules/database"]
 	path = modules/database
 	url = http://github.com/kohana/database.git
@@ -13,9 +10,6 @@
 [submodule "modules/orm"]
 	path = modules/orm
 	url = http://github.com/kohana/orm.git
-[submodule "modules/auth"]
-	path = modules/auth
-	url = http://github.com/kohana/auth.git
 [submodule "modules/userguide"]
 	path = modules/userguide
 	url = http://github.com/kohana/userguide.git
@@ -25,3 +19,25 @@
 [submodule "modules/unittest"]
 	path = modules/unittest
 	url = http://github.com/kohana/unittest.git
+[submodule "modules/bonafide"]
+	path = modules/bonafide
+	url = https://github.com/shadowhand/bonafide.git
+[submodule "modules/database-sqlite"]
+	path = modules/database-sqlite
+	url = git://github.com/TdroL/kohana-database-sqlite.git
+[submodule "modules/yaminify"]
+	path = modules/yaminify
+	url = git://github.com/TdroL/kohana-yaminify.git
+
+[submodule "modules/kostache"]
+	path = modules/kostache
+	url = git://github.com/TdroL/KOstache.git
+[submodule "modules/assets"]
+	path = modules/assets
+	url = git://github.com/TdroL/kohana-assets.git
+[submodule "modules/yaminify-assets"]
+	path = modules/yaminify-assets
+	url = git://github.com/TdroL/kohana-yaminify-assets.git
+[submodule "modules/minion"]
+	path = modules/minion
+	url = https://github.com/kohana-minion/core.git
