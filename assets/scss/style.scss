@@ -1,0 +1,36 @@
+@import "h5bp-head";
+
+/* ==|== primary styles =====================================================
+   Author:
+   ========================================================================== */
+
+@mixin prefix($attr, $value) {
+  -webkit-#{$attr}: $value;
+     -moz-#{$attr}: $value;
+      -ms-#{$attr}: $value;
+       -o-#{$attr}: $value;
+          #{$attr}: $value;
+}
+
+@mixin border-radius($radius) {
+  @include prefix(border-radius, $radius);
+}
+
+@mixin box-shadow($props) {
+  @include prefix(box-shadow, $props);
+}
+
+@mixin clearfix {
+  *zoom: 1;
+
+  &:before, &:after {
+    content: ""; display: table; }
+  &:after {
+    clear: both; }
+}
+
+body > div[role=main] {
+  @include clearfix;
+}
+
+@import "h5bp-tail";

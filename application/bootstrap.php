@@ -110,6 +110,7 @@ Kohana::modules(array(
 	'yaminify-assets' => MODPATH.'yaminify-assets', // Yaminify - Asset bridge
 	'assets'          => MODPATH.'assets',          // Asset
 	'minion'          => MODPATH.'minion',          // Minion
+	'minion-tools'    => MODPATH.'minion-tools',
 	// 'image'           => MODPATH.'image',           // Image manipulation
 	// 'userguide'       => MODPATH.'userguide',       // Userguide
 	// 'unittest'        => MODPATH.'unittest',        // Unit testing
@@ -153,7 +154,7 @@ if ( ! Route::cache())
 			'action'     => 'login',
 		));
 
-	Route::set('default', '<controller>(/<action>(/<id>))')
+	Route::set('default', '(<controller>(/<action>(/<id>)))')
 		->defaults(array(
 			'controller' => 'home',
 			'action'     => 'index',

@@ -9,3 +9,4 @@ kohana_release
 nbproject
 build
 *.sublime-workspace
+.sass-cache
