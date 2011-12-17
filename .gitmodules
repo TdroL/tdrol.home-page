@@ -1,24 +1,24 @@
 [submodule "system"]
 	path = system
-	url = http://github.com/kohana/core.git
+	url = git://github.com/kohana/core.git
 [submodule "modules/database"]
 	path = modules/database
-	url = http://github.com/kohana/database.git
+	url = git://github.com/kohana/database.git
 [submodule "modules/image"]
 	path = modules/image
-	url = http://github.com/kohana/image.git
+	url = git://github.com/kohana/image.git
 [submodule "modules/orm"]
 	path = modules/orm
-	url = http://github.com/kohana/orm.git
+	url = git://github.com/kohana/orm.git
 [submodule "modules/userguide"]
 	path = modules/userguide
-	url = http://github.com/kohana/userguide.git
+	url = git://github.com/kohana/userguide.git
 [submodule "modules/cache"]
 	path = modules/cache
-	url = http://github.com/kohana/cache.git
+	url = git://github.com/kohana/cache.git
 [submodule "modules/unittest"]
 	path = modules/unittest
-	url = http://github.com/kohana/unittest.git
+	url = git://github.com/kohana/unittest.git
 [submodule "modules/bonafide"]
 	path = modules/bonafide
 	url = https://github.com/shadowhand/bonafide.git
@@ -28,10 +28,9 @@
 [submodule "modules/yaminify"]
 	path = modules/yaminify
 	url = git://github.com/TdroL/kohana-yaminify.git
-
 [submodule "modules/kostache"]
 	path = modules/kostache
-	url = git://github.com/TdroL/KOstache.git
+	url = git://github.com/zombor/KOstache.git
 [submodule "modules/assets"]
 	path = modules/assets
 	url = git://github.com/TdroL/kohana-assets.git
@@ -43,4 +42,4 @@
 	url = https://github.com/kohana-minion/core.git
 [submodule "modules/minion-tools"]
 	path = modules/minion-tools
-	url = git://github.com/tdroL/kohana-minion-tools.git
+	url = git://github.com/TdroL/kohana-minion-tools.git
