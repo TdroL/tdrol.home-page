@@ -1,36 +1,28 @@
 @import "h5bp-head";
+@import "compass";
+@import "compass/layout/grid-background";
 
 /* ==|== primary styles =====================================================
    Author:
    ========================================================================== */
 
-@mixin prefix($attr, $value) {
-  -webkit-#{$attr}: $value;
-     -moz-#{$attr}: $value;
-      -ms-#{$attr}: $value;
-       -o-#{$attr}: $value;
-          #{$attr}: $value;
-}
-
-@mixin border-radius($radius) {
-  @include prefix(border-radius, $radius);
-}
-
-@mixin box-shadow($props) {
-  @include prefix(box-shadow, $props);
-}
-
-@mixin clearfix {
-  *zoom: 1;
-
-  &:before, &:after {
-    content: ""; display: table; }
-  &:after {
-    clear: both; }
-}
-
 body > div[role=main] {
-  @include clearfix;
+  margin: 0 auto;
+  max-width: 940px;
+  @include column-grid-background(12, 60px, 20px, 10px, #dee, #fff, true);
+  @include pie-clearfix;
+}
+
+#left, #right {
+  float: left;
+  width: 50%;
+}
+
+#left h1,
+#left p,
+#right h1,
+#right p {
+  margin: 10px;
 }
 
 @import "h5bp-tail";
