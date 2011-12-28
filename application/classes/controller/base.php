@@ -9,46 +9,51 @@ class Controller_Base extends Controller {
 
 	public function before()
 	{
+		// Init session
 		$this->session = Session::instance();
 		$_SESSION =& $this->session->as_array();
 
-		$directory = (strlen($this->request->directory()) > 0)
-		           ? (trim($this->request->directory(), '_').'_')
-		           : NULL;
-		$controler = $this->request->controller();
+		// Get view model name
+		$directory = $this->request->directory();
+		$controller = $this->request->controller();
 		$action = $this->request->action();
 
-		// Load View
+		if ( ! empty($directory))
+		{
+			$controller = $directory.'_'.$controller;
+		}
 
-		$view_name = strtolower('view_'.$directory.$controler.'_'.$action);
+		// Load view model
+		$view_name = strtolower('view_'.$controller.'_'.$action);
 
 		if (class_exists($view_name))
 		{
 			$this->view = new $view_name;
 
-			$this->view->_controller = $this;
-
-			if ($this->view->render_layout === TRUE)
-			{
-				$this->view->render_layout =
-					( ! in_array($action, $this->no_layout)) AND
-					( ! $this->request->is_ajax()) AND
-					$this->request->is_initial();
-			}
+			$this->view->render_layout =
+				// is render_layout set TRUE in view model?
+				$this->view->render_layout AND
+				// does controller needs layout?
+				( ! in_array($action, $this->no_layout)) AND
+				// is it not an AJAX request?
+				( ! $this->request->is_ajax()) AND
+				// is it an initial request (HMVC)
+				$this->request->is_initial();
 		}
 
 		// Set ACL
-
+		// get list of all actions in current controller
 		$actions = array();
-		foreach (get_class_methods($this) as $value)
+		foreach (get_class_methods($this) as $v)
 		{
-			if (substr($value, 0, 7) == 'action_')
+			if (substr($v, 0, 7) != 'action_')
 			{
-				$actions[] = substr($value, 7);
+				$actions[] = substr($v, 7);
 			}
 		}
 
-		$resource = $directory.$controler;
+		// set current controller (prepended with directory) and its actions as resource
+		$resource = $controller;
 		$acl = Bonafide::acl()
 		       ->resource($resource, $actions)
 		       ->role('admin')
@@ -56,15 +61,19 @@ class Controller_Base extends Controller {
 
 		$this->permissions($acl, $resource);
 
+		// default role
 		$role = 'guest';
 
+		// if logged in, get user's role
 		if ($this->user = $this->session->get('user'))
 		{
 			$role = $this->user->role;
 		}
 
+		// check user's privileges
 		if ( ! $acl->allowed($role, $action, $resource))
 		{
+			// TODO: change redirect to login view
 			$this->request->redirect(Route::get('login')->uri(array(
 				'redirect' => $this->request->uri()
 			)));
@@ -77,10 +86,33 @@ class Controller_Base extends Controller {
 	{
 		if (isset($this->view))
 		{
-			if (Kohana::$environment == Kohana::PRODUCTION)
+			// get qvalue for json, rss and html
+			$json = Request::accept_type(File::mime_by_ext('json'));
+			$rss  = Request::accept_type(File::mime_by_ext('rss'));
+			$html = Request::accept_type(File::mime_by_ext('html'));
+
+			// json: requires as_json() method in view model
+			if ($json >= $html AND method_exists($this->view, 'as_json'))
 			{
-				$this->view = Y::minify('html', $this->view);
+				$this->view = json_encode($this->view->as_array());
 			}
+			// rss: requires as_rss() method in view model
+			elseif ($rss >= $html AND method_exists($this->view, 'as_rss'))
+			{
+				$rss_data = $this->view->as_rss();
+
+				$this->view = Feed::create($rss_data['info'], $rss_data['items']);
+			}
+			// html
+			else
+			{
+				// minify
+				if (Kohana::$environment == Kohana::PRODUCTION)
+				{
+					$this->view = Y::minify('html', $this->view);
+				}
+			}
+
 			$this->response->body($this->view);
 		}
 
@@ -92,6 +124,7 @@ class Controller_Base extends Controller {
 		return $acl->allow('*');
 	}
 
+	// Helper method: checks if send post data is valid
 	protected function valid_post()
 	{
 		if ($this->request->method() != HTTP_Request::POST)
@@ -100,6 +133,7 @@ class Controller_Base extends Controller {
 		return Security::check($this->request->post('csfr'));
 	}
 
+	// Helper method: HTTP exceptions handler
 	public static function exception_handler(Exception $e)
 	{
 		switch (strtolower(get_class($e)))
