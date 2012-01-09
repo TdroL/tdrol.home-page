@@ -109,12 +109,19 @@ Kohana::modules(array(
 	'yaminify'        => MODPATH.'yaminify',        // Yaminify
 	'yaminify-assets' => MODPATH.'yaminify-assets', // Yaminify - Asset bridge
 	'assets'          => MODPATH.'assets',          // Asset
-	'minion'          => MODPATH.'minion',          // Minion
-	'minion-tools'    => MODPATH.'minion-tools',
 	// 'image'           => MODPATH.'image',           // Image manipulation
 	// 'userguide'       => MODPATH.'userguide',       // Userguide
 	// 'unittest'        => MODPATH.'unittest',        // Unit testing
 	));
+
+// Enable minion only on non production
+if (Kohana::$environment != Kohana::PRODUCTION)
+{
+	Kohana::modules(Kohana::modules() + array(
+		'minion'          => MODPATH.'minion',
+		'minion-tools'    => MODPATH.'minion-tools',
+	));
+}
 
 /**
  * Set custom exception handler
