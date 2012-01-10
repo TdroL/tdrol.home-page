@@ -87,22 +87,21 @@ class Controller_Base extends Controller {
 		if (isset($this->view))
 		{
 			// get qvalue for json, rss and html
-			$json = Request::accept_type(File::mime_by_ext('json'));
-			$rss  = Request::accept_type(File::mime_by_ext('rss'));
-			$html = Request::accept_type(File::mime_by_ext('html'));
+			$accept = $this->request->headers('accept');
 
 			// json: requires as_json() method in view model
-			if ($json >= $html AND method_exists($this->view, 'as_json'))
+			if (strpos($accept, 'json') !== FALSE AND method_exists($this->view, 'as_json'))
 			{
-				$this->view = json_encode($this->view->as_array());
+				$this->view = json_encode($this->view->as_json());
 			}
 			// rss: requires as_rss() method in view model
-			elseif ($rss >= $html AND method_exists($this->view, 'as_rss'))
+			elseif (strpos($accept, 'json') !== FALSE AND method_exists($this->view, 'as_rss'))
 			{
 				$rss_data = $this->view->as_rss();
 
 				$this->view = Feed::create($rss_data['info'], $rss_data['items']);
 			}
+			// html
 			// html
 			else
 			{
