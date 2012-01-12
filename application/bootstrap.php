@@ -115,7 +115,7 @@ Kohana::modules(array(
 	));
 
 // Enable minion only on non production
-if (Kohana::$environment != Kohana::PRODUCTION)
+if (Kohana::$environment != Kohana::PRODUCTION OR Kohana::$is_cli)
 {
 	Kohana::modules(Kohana::modules() + array(
 		'minion'          => MODPATH.'minion',
