@@ -7,9 +7,6 @@
 [submodule "modules/image"]
 	path = modules/image
 	url = git://github.com/kohana/image.git
-[submodule "modules/orm"]
-	path = modules/orm
-	url = git://github.com/kohana/orm.git
 [submodule "modules/userguide"]
 	path = modules/userguide
 	url = git://github.com/kohana/userguide.git
@@ -43,3 +40,6 @@
 [submodule "modules/minion-tools"]
 	path = modules/minion-tools
 	url = git://github.com/TdroL/kohana-minion-tools.git
+[submodule "modules/jelly"]
+	path = modules/jelly
+	url = https://github.com/creatoro/jelly.git
