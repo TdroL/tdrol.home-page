@@ -111,7 +111,7 @@ Kohana::modules(array(
 	'assets'          => MODPATH.'assets',          // Asset
 	'fomg'            => MODPATH.'fomg',            // Fomg
 	// 'image'           => MODPATH.'image',           // Image manipulation
-	'userguide'       => MODPATH.'userguide',       // Userguide
+	//'userguide'       => MODPATH.'userguide',       // Userguide
 	// 'unittest'        => MODPATH.'unittest',        // Unit testing
 	));
 

@@ -43,3 +43,6 @@
 [submodule "modules/jelly"]
 	path = modules/jelly
 	url = https://github.com/creatoro/jelly.git
+[submodule "modules/fomg"]
+	path = modules/fomg
+	url = https://github.com/TdroL/kohana-fomg.git

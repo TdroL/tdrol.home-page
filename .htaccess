@@ -332,7 +332,6 @@ FileETag None
 </IfModule>
 
 
-
 # ----------------------------------------------------------------------
 # Suppress or force the "www." at the beginning of URLs
 # ----------------------------------------------------------------------
@@ -542,7 +541,7 @@ AddCharset utf-8 .css .js .xml .json .rss .atom
 # Favicon
 # ----------------------------------------------------------------------
 <IfModule mod_rewrite.c>
-    RewriteRule ^(favicon\.ico)$ assets/img/$1 [PT]
+    RewriteRule ^(favicon\.ico|apple-touch-icon\.png)$ assets/img/$1 [PT]
 </IfModule>
 
 
@@ -551,7 +550,7 @@ AddCharset utf-8 .css .js .xml .json .rss .atom
 # ----------------------------------------------------------------------
 <IfModule mod_rewrite.c>
   # Installation directory
-  RewriteBase /sites/kohana-base/
+  RewriteBase /sites/tdrol.just-play.pl/
 
   # Protect application and system files from being viewed
   RewriteRule ^(?:application|minion|modules|system)\b.* index.php/$0 [L]
