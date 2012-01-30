@@ -1,0 +1,38 @@
+<h2>Links <small>Index</small></h2>
+
+{{#flash}}
+<div class="alert-message {{flash.type}}"><p>{{flash.message}}</p></div>
+{{/flash}}
+
+<p>
+  <a href="{{url.create}}" class="btn primary link-create">Add new link</a>
+</p>
+
+<table id="links-index">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Title</th>
+      <th>Parent</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#links}}
+    <tr id="link-{{id}}">
+      <td>{{id}}</td>
+      <td><a href="{{url}}">{{name}}</a></td>
+      <td title="{{title}}">{{title-short}}</td>
+      <td>
+        {{#link}}<a href="#link-{{id}}" title="{{name}} - {{title}}">#{{id}}</a>{{/link}}
+        {{^link}}--{{/link}}
+      </td>
+      <td>
+        <a href="{{urls.update}}" class="btn link-update" data-label="Update"><span>Update</span></a>
+        <a href="{{urls.delete}}" class="btn link-delete" data-label="Delete"><span>Delete</span></a>
+      </td>
+    </tr>
+    {{/links}}
+  </tbody>
+</table>

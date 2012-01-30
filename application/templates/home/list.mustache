@@ -1,0 +1,21 @@
+<ul>
+{{#links}}
+	<li>
+		<a href="{{url}}"{{#title}} title="{{title}}"{{/title}} rel="external">{{name}}</a>
+		{{#desc}}
+		<div>
+			{{desc}}
+		</div>
+		{{/desc}}
+		{{#tools}}
+		<div class="project-tools">
+			{{tools}}
+		</div>
+		{{/tools}}
+
+		{{#has_links}}
+			{{>list}}
+		{{/has_links}}
+	</li>
+{{/links}}
+</ul>

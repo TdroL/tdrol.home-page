@@ -1,0 +1,56 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Admin{{#head.title}} - {{head.title}}{{/head.title}}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <meta name="robots" content="noindex">
+
+  {{#assets.head.css}}
+  <link rel="stylesheet" href="{{.}}">
+  {{/assets.head.css}}
+
+  {{#assets.head.js}}
+  <script src="{{.}}"></script>
+  {{/assets.head.js}}
+</head>
+
+<body>
+
+  <header>
+    <div class="container">
+      <h1><a class="brand" href="#">Admin Panel</a></h1>
+      {{#render_header}}
+      <nav>
+        <ul>
+        {{#nav}}
+          <li{{#is_current}} class="active"{{/is_current}}><a href="{{url}}">{{name}}</a></li>
+        {{/nav}}
+        </ul>
+      </nav>
+
+      <p class="logout">
+        <a href="{{url.logout}}" class="btn danger">Logout</a>
+      </p>
+      {{/render_header}}
+    </div>
+  </header>
+
+
+  <div role="main">
+    <div class="container">
+      {{>content}}
+    </div>
+  </div>
+
+  {{#env.development}}{{&profiler}}{{/env.development}}
+
+  <script src="{{assets.id.jquery-cdn}}"></script>
+  <script>window.jQuery || document.write('<script src="{{assets.id.jquery}}"><\/script>')</script>
+
+  {{#assets.body.js}}
+  <script defer src="{{.}}"></script>
+  {{/assets.body.js}}
+</body>
+</html>

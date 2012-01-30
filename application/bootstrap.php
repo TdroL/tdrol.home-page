@@ -53,7 +53,7 @@ ini_set('unserialize_callback_func', 'spl_autoload_call');
 /**
  * Set the default language
  */
-I18n::lang('pl');
+I18n::lang('en');
 
 /**
  * Set Kohana::$environment if a 'KOHANA_ENV' environment variable has been supplied.
@@ -79,7 +79,7 @@ Kohana::$environment = constant('Kohana::'.strtoupper(Arr::get($_SERVER, 'KOHANA
 Kohana::init(array(
 	'base_url'   => (Kohana::$environment == Kohana::PRODUCTION)
 					? '/'
-					: '/sites/kohana-base/',
+					: '/sites/tdrol.just-play.pl/',
 	'index_file' => FALSE,
 	'profile'    => Kohana::$environment != Kohana::PRODUCTION,
 	'caching'    => Kohana::$environment == Kohana::PRODUCTION,
@@ -104,13 +104,14 @@ Kohana::modules(array(
 	'cache'           => MODPATH.'cache',           // Cache
 	'database-sqlite' => MODPATH.'database-sqlite', // SQLite driver
 	'database'        => MODPATH.'database',        // Database access
-	'orm'             => MODPATH.'orm',             // ORM
+	'jelly'           => MODPATH.'jelly',           // Jelly - an ORM lib
 	'kostache'        => MODPATH.'kostache',        // KOstache
 	'yaminify'        => MODPATH.'yaminify',        // Yaminify
 	'yaminify-assets' => MODPATH.'yaminify-assets', // Yaminify - Asset bridge
 	'assets'          => MODPATH.'assets',          // Asset
+	'fomg'            => MODPATH.'fomg',            // Fomg
 	// 'image'           => MODPATH.'image',           // Image manipulation
-	// 'userguide'       => MODPATH.'userguide',       // Userguide
+	'userguide'       => MODPATH.'userguide',       // Userguide
 	// 'unittest'        => MODPATH.'unittest',        // Unit testing
 	));
 
@@ -131,7 +132,7 @@ set_exception_handler(array('Controller_Base', 'exception_handler'));
 /**
  * Set the cookies salt
  */
-Cookie::$salt = '<random-hash>';
+Cookie::$salt = '[}fb_b&r-$}t@41iy*nuq@p+&f\@*)0h=&/d=wp0tx9y:/%?\'hqwe--vvdx[z(e^';
 
 /**
  * Make cookies inaccessible to Javascript
@@ -157,8 +158,27 @@ if ( ! Route::cache())
 			'redirect' => '.+'
 		))
 		->defaults(array(
-			'controller' => 'home',
+			'controller' => 'admin',
 			'action'     => 'login',
+		));
+
+	Route::set('logout', 'logout')
+		->defaults(array(
+			'controller' => 'admin',
+			'action'     => 'logout',
+		));
+
+	Route::set('not-allowed', 'not-allowed')
+		->defaults(array(
+			'controller' => 'admin',
+			'action'     => 'notallowed',
+		));
+
+	Route::set('admin', 'admin(/<controller>(/<action>(/<id>)))')
+		->defaults(array(
+			'directory' => 'admin',
+			'controller' => 'link',
+			'action'     => 'index',
 		));
 
 	Route::set('default', '(<controller>(/<action>(/<id>)))')

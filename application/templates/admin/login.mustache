@@ -1,0 +1,34 @@
+<h2>Login</h2>
+
+<form id="form-admin-login" action="{{url.current}}" method="post">
+	<input type="hidden" name="__post-data__" value="{{post_data}}" />
+	{{&security.csfr}}
+
+	{{#error.auth}}
+	<p class="alert-message error">{{error.auth}}</p>
+	{{/error.auth}}
+
+	<div class="clearfix{{#error.auth-login}} error{{/error.auth-login}}">
+		<label for="auth-login">Login</label>
+		<div class="input">
+			<input type="text" name="auth-login" id="auth-login" value="{{post.auth-login}}" required />
+			{{#error.auth-login}}
+			<span class="help-inline">{{error.auth-login}}</span>
+			{{/error.auth-login}}
+		</div>
+	</div>
+
+	<div class="clearfix{{#error.auth-password}} error{{/error.auth-password}}">
+		<label for="auth-password">Password</label>
+		<div class="input">
+			<input type="password" name="auth-password" id="auth-password" required />
+			{{#error.auth-password}}
+			<span class="help-inline">{{error.auth-password}}</span>
+			{{/error.auth-password}}
+		</div>
+	</div>
+
+	<div class="actions">
+		<input class="btn primary" type="submit" value="Login" />
+	</div>
+</form>

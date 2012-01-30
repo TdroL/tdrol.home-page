@@ -1,15 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class View_Layout extends Kostache_Layout
-{
-
-	public function __construct($template = NULL, array $partials = NULL)
-	{
-		parent::__construct($template, $partials);
-		$this->_init();
-	}
-
-	protected function _init() {}
+class View_Layout extends Kostache_Layout {
 
 	public function assets()
 	{
@@ -36,9 +27,9 @@ class View_Layout extends Kostache_Layout
 	{
 		return array(
 			'lang' => I18n::lang(),
-			'title' => 'Kohana base',
-			'description' => '',
-			'author' => '',
+			'title' => '{tdroL}',
+			'description' => 'tdroL (/te-drol/): a web developer with too much spare time.',
+			'author' => 'tdroL',
 			'noindex' => FALSE,
 			'canonical' => NULL
 		);
@@ -52,6 +43,89 @@ class View_Layout extends Kostache_Layout
 		}
 
 		return NULL;
+	}
+
+	public function promotejs()
+	{
+		$wide = true;
+		// show image
+
+		$global_objects = array(
+			'Array' => array('isArray', 'constructor', 'index', 'input', 'length', 'pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift', 'concat', 'join', 'slice', 'toString', 'indexOf', 'lastIndexOf', 'forEach', 'map', 'some', 'every', 'filter', 'Creating an Array', 'Example: Creating a Two-dimensional Array'),
+			'String' => array('prototype', 'fromCharCode', 'constructor', 'length', 'charAt', 'concat', 'indexOf', 'lastIndexOf', 'localeCompare', 'match', 'replace', 'search', 'slice', 'split', 'substr', 'substring', 'toLocaleLowerCase', 'toLocaleUpperCase','toLowerCase', 'toString', 'toUpperCase', 'valueOf'),
+			'Number' => array('toExponential', 'toFixed', 'toLocaleString', 'toPrecision', 'toString', 'valueOf', 'Example: Using the Number object to assign values to numeric variables', 'Example: Using Number to convert a Date object'),
+			'RegExp' => array('constructor', 'global', 'ignoreCase', 'lastIndex', 'multiline', 'source', 'exec', 'test', 'toString', 'Example: Using a regular expression to change data format', 'Example: Using a regular expression with the sticky flag'),
+			'Function' => array('prototype', 'arguments', 'arity', 'constructor', 'length', 'apply', 'call', 'toString', 'Example: Specifying arguments with the Function constructor')
+		);
+
+		$combinations = array();
+
+		foreach ($global_objects as $i => $attrs) {
+			foreach ($attrs as $idx => $val) {
+				$seo_string = array("JS ",$i," ",$val,", JavaScript ", $i, " ", $val);
+				if (stripos($val, " ") < 0) {
+					$seo_string = array_merge($seo_string, array(", JS ",$i, " .",$val,", JavaScript ", $i, " .", $val));
+				}
+
+				$parts = explode(",",implode("", $seo_string));
+				foreach ($parts as $elem) {
+				array_push($combinations, array(trim($elem), "https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/".$i));
+				}
+			}
+		}
+
+		$images = array(
+			array("http://static.jsconf.us/promotejsv.gif", "280", "160"),
+			array("http://static.jsconf.us/promotejsh.gif", "150", "180")
+		);
+
+		array_push($combinations, array("JS Screencasts, Learn JS, JS Videos, JavaScript Screencasts, JS Education, JS Training, Proper JS", "http://learnjs.org"));
+		array_push($combinations, array("Learning JavaScript with Object Graphs", "http://howtonode.org/object-graphs"));
+		array_push($combinations, array("In Search of JavaScript Developers: A Gist", "http://blog.rebeccamurphey.com/in-search-of-javascript-developers-a-gist"));
+		array_push($combinations, array("On Rolling Your Own, Enterprise jQuery, Enterprise JavaScript, Enterprise JS", "http://blog.rebeccamurphey.com/on-rolling-your-own"));
+		array_push($combinations, array("Proper JS, Proper JavaScript Training, JS Tutorial, Learning JS, Eloquent JavaScript, Eloquent JS, JS Data Structures, JS DOM", "http://eloquentjavascript.net"));
+		array_push($combinations, array("jQuery, jQuery Fundamantals, JS Fundamentals, JS jQuery, Learn jQuery, jQuery done right, Best jQuery Tutorial, best jQuery training", "http://jqfundamentals.com/book/book.html"));
+
+		$tutorial_options = array("JS Tutorial", "JavaScript Tutorial", "JavaScript Guide", "Learn JavaScript JS", "How To Learn JS", "Learning JavaScript");
+		$reference_options = array("JavaScript Reference", "JavaScript Guide", "JavaScript API", "JS API", "JS Guide", "JS Reference", "Learn JS", "JS Documentation");
+
+		$counter = rand(1, 10);
+		$alt = $tutorial_options[rand(0, count($tutorial_options)-1)];
+		$href = "https://developer.mozilla.org/en/JavaScript/Guide";
+
+		if ($counter % 10 == 0)
+		{
+			$alt = $reference_options[rand(0, count($reference_options) -1)];
+			$href = "https://developer.mozilla.org/en/JavaScript";
+		}
+		else if ($counter % 5 != 0)
+		{
+			$i = rand(0, count($combinations)-1);
+			$combo = $combinations[$i];
+			$alt = $combo[0];
+			$href = $combo[1];
+		}
+
+		$img = $images[$wide == true];
+		$src = $img[0];
+		$height = $img[1];
+		$width = $img[2];
+
+		return '<a href="'.$href.'" title="'.$alt.'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" alt="'.$alt.'"/></a>';
+	}
+
+	public function quote()
+	{
+		$quotes = Kohana::$config->load('quotes')->as_array();
+
+		if (empty($quotes))
+		{
+			return NULL;
+		}
+
+		$i = round(time() / (60*60*24)) % (count($quotes) - 1);
+
+		return trim($quotes[$i]);
 	}
 
 	public function security()

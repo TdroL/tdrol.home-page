@@ -11,13 +11,125 @@ class Controller_Base extends Controller {
 	{
 		// Init session
 		$this->session = Session::instance();
-		$_SESSION =& $this->session->as_array();
 
-		// Get view model name
+		// Alias common data
 		$directory = $this->request->directory();
 		$controller = $this->request->controller();
 		$action = $this->request->action();
 
+		//@EXPERIMENTAL
+		// Check, if any encrypted post data was sent
+		if ($encrypted = $this->request->post('__post-data__'))
+		{
+			$decrypted = unserialize(Encrypt::instance()->decode($encrypted));
+
+			// get all post data
+			$post = $this->request->post();
+
+			// remove encrypted post data
+			unset($post['__post-data__']);
+
+			// save current and encrypted post data
+			$this->request->post($post + $decrypted);
+		}
+		//#EXPERIMENTAL
+
+		// Set ACL:
+		// get list of all actions in current controller
+		$actions = array();
+		foreach (get_class_methods($this) as $v)
+		{
+			if (substr($v, 0, 7) != 'action_')
+			{
+				$actions[] = substr($v, 7);
+			}
+		}
+
+		// set current controller (prepended with directory) and its actions as resource
+		$resource = str_replace('_', '/', $controller);
+		$acl = Bonafide::acl()
+		       ->resource($resource, $actions)
+		       ->role('guest')
+		       ->role('admin')
+		           ->allow('admin');
+
+		$this->permissions($acl, $resource);
+
+		// default role
+		$role = 'guest';
+
+		// if logged in, get user's role
+		if ($this->user = $this->session->get('user'))
+		{
+			$role = $this->user->role
+					? $this->user->role
+					: $role;
+		}
+
+		// check user's privileges
+		if ( ! ($acl->allowed($role, $action, $resource)
+		    OR
+		    $acl->allowed('guest', $action, $resource)))
+		{
+			// if not logged
+			if ( ! $this->user)
+			{
+				// if user sent auth data, try to log in
+				$login = $this->request_login();
+
+				// if logged, get user
+				$this->user = $this->session->get('user');
+
+				// if failed or user did not send auth data,
+				// show login page
+				if ( ! $this->user)
+				{
+					$this->set_dummy($login->body());
+
+					return parent::before();
+				}
+				// if logged in, recheck the permissions
+				else if ( ! $acl->allowed($this->user->role, $action, $resource))
+				{
+					$notallowed = $this->request_notallowed();
+					$this->set_dummy($notallowed->body());
+
+					return parent::before();
+				}
+				// permission granted - show page
+				else
+				{
+					$post = $this->request->post();
+
+					// remove unneeded post data
+					unset($post['auth-login'], $post['auth-password'], $post['csfr']);
+
+					// if no post data present - change request method (valid_post() == FALSE)
+					if (empty($post))
+					{
+						$this->request->method(HTTP_Request::GET);
+					}
+					// if post data present - restore csfr
+					else
+					{
+						$post['csfr'] = Security::token();
+					}
+
+					$this->request->post($post);
+				}
+
+			}
+			else
+			{
+				// if logged, but not allowed
+				$notallowed = $this->request_notallowed();
+				$this->set_dummy($notallowed->body());
+
+				return parent::before();
+			}
+		}
+
+		// Get view model name
 		if ( ! empty($directory))
 		{
 			$controller = $directory.'_'.$controller;
@@ -30,7 +142,7 @@ class Controller_Base extends Controller {
 		{
 			$this->view = new $view_name;
 
-			$this->view->render_layout =
+			$this->view->render_layout = (
 				// is render_layout set TRUE in view model?
 				$this->view->render_layout AND
 				// does controller needs layout?
@@ -38,48 +150,11 @@ class Controller_Base extends Controller {
 				// is it not an AJAX request?
 				( ! $this->request->is_ajax()) AND
 				// is it an initial request (HMVC)
-				$this->request->is_initial();
+				$this->request->is_initial() OR
+				$this->request->headers('X-Force-Layout'));
 		}
 
-		// Set ACL
-		// get list of all actions in current controller
-		$actions = array();
-		foreach (get_class_methods($this) as $v)
-		{
-			if (substr($v, 0, 7) != 'action_')
-			{
-				$actions[] = substr($v, 7);
-			}
-		}
-
-		// set current controller (prepended with directory) and its actions as resource
-		$resource = $controller;
-		$acl = Bonafide::acl()
-		       ->resource($resource, $actions)
-		       ->role('admin')
-		           ->allow('admin');
-
-		$this->permissions($acl, $resource);
-
-		// default role
-		$role = 'guest';
-
-		// if logged in, get user's role
-		if ($this->user = $this->session->get('user'))
-		{
-			$role = $this->user->role;
-		}
-
-		// check user's privileges
-		if ( ! $acl->allowed($role, $action, $resource))
-		{
-			// TODO: change redirect to login view
-			$this->request->redirect(Route::get('login')->uri(array(
-				'redirect' => $this->request->uri()
-			)));
-		}
-
-		parent::before();
+		return parent::before();
 	}
 
 	public function after()
@@ -101,7 +176,6 @@ class Controller_Base extends Controller {
 
 				$this->view = Feed::create($rss_data['info'], $rss_data['items']);
 			}
-			// html
 			// html
 			else
 			{
@@ -131,6 +205,45 @@ class Controller_Base extends Controller {
 
 		return Security::check($this->request->post('csfr'));
 	}
+
+	public function request_login()
+	{
+		$login_uri = Route::get('login')->uri(array(
+			'redirect' => $this->request->uri()
+		));
+
+		// request the "Login" page
+		return Request::factory($login_uri)
+			->method($this->request->method())
+			->post($this->request->post())
+			->headers($this->request->headers())
+			->headers('X-Force-Layout', 'true')
+			->execute();
+	}
+
+	protected function request_notallowed()
+	{
+		$notallowed_uri = Route::get('not-allowed')->uri();
+
+		// request the "Not allowed" page
+		return Request::factory($notallowed_uri)
+			->method($this->request->method())
+			->post($this->request->post())
+			->headers($this->request->headers())
+			->headers('X-Force-Layout', 'true')
+			->execute();
+	}
+
+	protected function set_dummy($body)
+	{
+		// override current action
+		$this->request->action('dummy');
+		// set body
+		$this->response->body($body);
+	}
+
+	// An empty action
+	public function action_dummy() {}
 
 	// Helper method: HTTP exceptions handler
 	public static function exception_handler(Exception $e)

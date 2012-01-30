@@ -27,7 +27,7 @@ return array(
 		'caching'      => TRUE,
 		'profiling'    => FALSE,
 	),
-	'session' => array(
+	'sqlite' => array(
 		'type' => 'sqlite',
 		'connection' => array(
 			'dsn' => 'sqlite:'.APPPATH.'db/db.sqlite',

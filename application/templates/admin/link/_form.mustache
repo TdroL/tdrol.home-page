@@ -1,0 +1,27 @@
+{{#form}}
+{{&open}}
+  <fieldset>
+    {{#has_errors}}
+    <div class="alert-message error"><p>Found errors in form.</p></div>
+    {{/has_errors}}
+
+    {{#fields}}
+    <div class="clearfix{{#error}} error{{/error}}">
+      {{&label}}
+      <div class="input">
+        {{&input}}
+        {{#error}}
+        <span class="help-inline">{{error}}</span>
+        {{/error}}
+      </div>
+    </div>
+    {{/fields}}
+
+    <div class="actions">
+      <input type="submit" class="btn primary" value="Save" />
+      <a href="{{url.cancel}}" class="btn danger">Cancel</a>
+    </div>
+
+  </fieldset>
+{{&close}}
+{{/form}}

@@ -1,28 +1,254 @@
 @import "h5bp-head";
 @import "compass";
-@import "compass/layout/grid-background";
 
 /* ==|== primary styles =====================================================
-   Author:
+   Author: tdroL
    ========================================================================== */
 
-body > div[role=main] {
+$link-color: #933;
+$gutter: 10px;
+
+body {
+  max-width: 720px;
   margin: 0 auto;
-  max-width: 940px;
-  @include column-grid-background(12, 60px, 20px, 10px, #dee, #fff, true);
-  @include pie-clearfix;
+  padding: 0.25em 0 0;
+  font: 1em/1.625 "Trebuchet MS", Helvetica, Jamrul, sans-serif;
+  background-color: #fff;
 }
 
-#left, #right {
-  float: left;
-  width: 50%;
+a {
+  color: $link-color;
+  &:visited {
+    color: darken($link-color, 10%);
+  }
+  &:hover {
+    text-decoration: underline;
+    color: lighten($link-color, 10%);
+  }
 }
 
-#left h1,
-#left p,
-#right h1,
-#right p {
-  margin: 10px;
+h2 {
+  margin-bottom: 0.3em;
+
+  + h3 {
+    margin-top: 0;
+  }
+}
+
+header {
+  border-bottom: 2px solid #666;
+  padding: 0 $gutter;
+
+  h1 {
+    color: #222;
+    font: {
+      weight: bold;
+      size: 3.7125em;
+    }
+    line-height: 1;
+    letter-spacing: -0.05em;
+    margin: 0 0 0.25em;
+
+    &:before,&:after {
+      color: $link-color;
+      font: 1.2em/1 "DejaVu Sans Mono", "Courier new", Courier, monospace;
+    }
+
+    &:before {
+      content: "{";
+    }
+
+    &:after {
+      content: "}";
+    }
+  }
+
+  blockquote {
+    font: italic 0.8em/1.5 Georgia, serif;
+    letter-spacing: 0.0925em;
+    display: none;
+
+    &:before, &:after {
+      content: "\201D";
+    }
+
+    &:empty {
+      visibility: hidden;
+    }
+  }
+
+}
+
+ul {
+  padding: 0 0 0 1em;
+}
+
+li {
+  margin-bottom: 0.5em;
+
+  > ul {
+    margin: 0.5em 0 0 0.5em;
+  }
+
+  > div:first-of-type {
+    font-style: italic;
+    font-size: 0.9em;
+  }
+
+  > div.project-tools {
+    color: #555;
+    font-size: 0.8em;
+  }
+}
+
+#other-stuff, #links {
+  padding: 0 $gutter;
+}
+
+.kohana {
+  display: none;
+}
+
+@media only screen and (min-width: 480px) {
+
+}
+
+@media only screen and (min-width: 768px) {
+
+  body {
+    padding: 1em 0 0;
+  }
+
+  header {
+    h1 {
+      margin: 0;
+    }
+
+    blockquote {
+      display: block;
+    }
+  }
+
+  #other-stuff, #links {
+    margin: 0;
+  }
+
+  #links > ul {
+    padding: 0;
+    list-style: none;
+  }
+
+  #other-stuff, #links > ul {
+    @include pie-clearfix;
+  }
+
+  #other-stuff > div, #links > ul > li {
+    float: left;
+    width: 50%;
+    @include box-sizing(border-box);
+    padding: 0 $gutter 0 0;
+
+    &:nth-of-type(2n) {
+      padding: 0 0 0 $gutter;
+    }
+  }
+
+  .kohana {
+    display: block;
+  }
+}
+
+#form-admin-login {
+  margin-top: 1em;
+
+  > div {
+    @include pie-clearfix;
+    margin-bottom: 1em;
+
+    &:last-of-type {
+      border-top: 1px solid #ddd;
+      margin: 1em 0;
+      padding: 1em 0;
+    }
+  }
+
+  input:invalid {
+    border-color: #E9322D;
+    color: #B94A48;
+    background: #fff;
+  }
+
+  input:invalid:focus {
+    border-color: #E9322D;
+    @include box-shadow(0 0 6px #F8B9B7);
+  }
+}
+
+.link-update, .link-delete {
+  display: inline-block;
+  position: relative;
+  width: 16px;
+  line-height: 16px;
+  padding: 4px;
+  margin: 0 4px;
+
+  @include background(linear-gradient(#ffffff, #ffffff 25%, #e6e6e6) no-repeat);
+  background-color: #e6e6e6;
+
+  border: 1px solid #ccc;
+  border-bottom-color: #bbb;
+  @include border-radius(4px);
+
+  @include box-shadow(inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05));
+  @include transition(0.1s linear all);
+
+  &:hover {
+    background-position: 0 -15px;
+  }
+
+  &[data-label]:after {
+    @include opacity(0.0);
+    @include transition(0.1s linear opacity);
+
+    position: absolute;
+    top: -27px;
+    left: 8px;
+    margin-left: -100%;
+    line-height: 1.5;
+    font-size: 0.9em;
+    padding: 3px 8px;
+    content: attr(data-label);
+    @include border-radius(4px);
+    background: #000;
+    color: #fff;
+  }
+
+  &[data-label]:hover:after {
+    @include opacity(0.8);
+    @include box-shadow(inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05));
+  }
+
+  span {
+    display: block;
+    height: 16px;
+    width: 16px;
+    text-indent: -99999px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background: url(../img/icons/ui-icons_222222_256x240.png);
+  }
+}
+
+.link-update span {
+  background-position: -64px -112px;
+}
+
+.link-delete span {
+  background-position: -48px -128px;
+}
+
+tr[id]:target {
+  background: #f5f5f5;
 }
 
 @import "h5bp-tail";
