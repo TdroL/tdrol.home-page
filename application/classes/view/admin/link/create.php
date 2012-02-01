@@ -26,8 +26,9 @@ class View_Admin_Link_Create extends View_Admin {
 		$fomg->set('class.*', 'xlarge');
 		$fomg->set('class.order', 'mini');
 		$fomg->set('class.desc', 'xxlarge');
-		$fomg->set('attr.desc.rows', 3);
 		$fomg->set('class.tools', 'xxlarge');
+
+		$fomg->set('attr.desc.rows', 3);
 		$fomg->set('attr.tools.rows', 3);
 
 		return $fomg;

@@ -66,25 +66,45 @@ class Model_Link extends Jelly_Model {
 		// if updating existing one
 		if ($id !== NULL)
 		{
-			# code...
-		}
-		// if creating new
-		else
-		{
-			$link = $this->link;
-
-			// if has parent link
-			if ($link->loaded())
+			if ($this->changed('link') OR $this->changed('order'))
 			{
 				$db = Database::instance($this->_meta->db());
 				$db->begin();
 
+				$old_link = $this->original('link')->select();
+				$new_link = $this->link;
+
+				$old_order = $this->original('order');
+				$new_order = $this->order;
+
 				try
 				{
+					// old link
 					$query = Jelly::query('link')
-						->set(array('order' => DB::expr($db->quote_column('order').' + 1')))
-						->where('link', '=', $this->link->id)
-						->where('order', '>= ', $this->order)
+						->set(array('order' => DB::expr($db->quote_column('order').' - 1')));
+					if ($old_link->loaded())
+					{
+						$query->where('link', '=', $old_link->id);
+					}
+					else
+					{
+						$query->where('link', 'IS', DB::expr('NULL'));
+					}
+					$query->where('order', '>= ', $old_order)
+						->update();
+
+					// new link
+					$query = Jelly::query('link')
+						->set(array('order' => DB::expr($db->quote_column('order').' + 1')));
+					if ($new_link->loaded())
+					{
+						$query->where('link', '=', $new_link->id);
+					}
+					else
+					{
+						$query->where('link', 'IS', DB::expr('NULL'));
+					}
+					$query->where('order', '>= ', $new_order)
 						->update();
 
 					parent::save($validation);
@@ -96,6 +116,40 @@ class Model_Link extends Jelly_Model {
 					$db->rollback();
 					throw $e;
 				}
+			}
+		}
+		// if creating new
+		else
+		{
+			$db = Database::instance($this->_meta->db());
+			$db->begin();
+
+			try
+			{
+				$query = Jelly::query('link')
+					->set(array('order' => DB::expr($db->quote_column('order').' + 1')));
+
+				// if has parent link
+				if ($this->link->loaded())
+				{
+					$query->where('link', '=', $this->link->id);
+				}
+				else
+				{
+					$query->where('link', 'IS', DB::expr('NULL'));
+				}
+
+				$query->where('order', '>= ', $this->order)
+					->update();
+
+				parent::save($validation);
+
+				$db->commit();
+			}
+			catch (Exception $e)
+			{
+				$db->rollback();
+				throw $e;
 			}
 		}
 
@@ -124,7 +178,10 @@ class Model_Link extends Jelly_Model {
 
 		if ($order = Arr::get($options, 'order'))
 		{
-			$links->order_by($order[0], $order[1]);
+			foreach ($order as $field => $sorting)
+			{
+				$links->order_by($field, $sorting);
+			}
 		}
 		else
 		{

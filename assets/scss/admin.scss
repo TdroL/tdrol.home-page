@@ -203,8 +203,11 @@ table td:last-of-type {
   background-position: -176px -96px;
 }
 
-tr[id]:target {
-  background: #f5f5f5;
+tr {
+  @include transition(0.5s background);
+  &[id]:target, &.target {
+    background: #f5f5f5;
+  }
 }
 
 ul.sortable {

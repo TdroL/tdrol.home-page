@@ -41,10 +41,9 @@ header {
 
   h1 {
     color: #222;
-    font: {
-      weight: bold;
-      size: 3.7125em;
-    }
+    font-weight: bold;
+    font-size: 2.5em;
+
     line-height: 1;
     letter-spacing: -0.05em;
     margin: 0 0 0.25em;
@@ -122,6 +121,7 @@ li {
   header {
     h1 {
       margin: 0;
+      font-size: 3.7125em;
     }
 
     blockquote {

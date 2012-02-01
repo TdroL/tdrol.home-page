@@ -75,8 +75,8 @@ class View_Layout extends Kostache_Layout {
 		}
 
 		$images = array(
-			array("http://static.jsconf.us/promotejsv.gif", "280", "160"),
-			array("http://static.jsconf.us/promotejsh.gif", "150", "180")
+			"http://static.jsconf.us/promotejsv.gif",
+			"http://static.jsconf.us/promotejsh.gif"
 		);
 
 		array_push($combinations, array("JS Screencasts, Learn JS, JS Videos, JavaScript Screencasts, JS Education, JS Training, Proper JS", "http://learnjs.org"));
@@ -106,12 +106,9 @@ class View_Layout extends Kostache_Layout {
 			$href = $combo[1];
 		}
 
-		$img = $images[$wide == true];
-		$src = $img[0];
-		$height = $img[1];
-		$width = $img[2];
+		$src = $images[$wide == true];
 
-		return '<a href="'.$href.'" title="'.$alt.'"><img src="'.$src.'" height="'.$height.'" width="'.$width.'" alt="'.$alt.'"/></a>';
+		return '<a href="'.$href.'" title="'.$alt.'"><img src="'.$src.'" alt="'.$alt.'"/></a>';
 	}
 
 	public function quote()

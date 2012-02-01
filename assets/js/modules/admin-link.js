@@ -5,6 +5,7 @@ window.jQuery && jQuery(function ($) {
 		$parent = $('#form-link-link'),
 		$order = $('#form-link-order'),
 		links = $order.data('links'),
+		currentId = +$('#form-link-id').val(),
 		$sortable = $('<ul>', {
 			'class': 'sortable'
 		}),
@@ -18,6 +19,15 @@ window.jQuery && jQuery(function ($) {
 		return;
 	}
 
+
+	links[0] = links[0] || {links: []};
+	$.each(links, function (k, v) {
+		if ('link_id' in v && ! v.link_id) {
+			links[0].links.push(v);
+		}
+
+	});
+
 	var event = {
 		nameChanged: function () {
 			$movable.text($name.val());
@@ -26,17 +36,7 @@ window.jQuery && jQuery(function ($) {
 			var parentId = +$parent.find(':selected').val(),
 				currentOrder = +$order.val();
 
-			console.log('parentId', parentId);
-
-			if (parentId === 0)
-			{
-				action.toggleList('hide');
-			}
-			else
-			{
-				action.toggleList('show');
-				action.renderList(parentId, currentOrder);
-			}
+			action.renderList(parentId, currentOrder);
 		},
 		stopSorting: function () {
 			action.getCurrentOrder();
@@ -65,20 +65,21 @@ window.jQuery && jQuery(function ($) {
 
 			$order.val($prev.length ? ($prev.data('order') + 1) : 1);
 		},
-		toggleList: function(state) {
-			$order.closest('div.clearfix')[state]();
-		},
 		renderList: function (parentId, currentOrder) {
 			var appended = false;
 
 			$sortable.detach().empty();
 
 			if (links[parentId]) {
+
 				$.each(links[parentId].links, function(k, v) {
 					if ( !  appended && v.order >= currentOrder) {
 						$sortable.append($movable);
 						appended = true;
 					}
+
+					if (v.id === currentId)
+						return;
 
 					$sortable.append($('<li>', {
 						'text': v.name,

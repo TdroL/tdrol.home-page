@@ -4,7 +4,12 @@ class View_Admin_Link_Index extends View_Admin {
 
 	public function links()
 	{
-		$links = $this->model->get_links();
+		$links = $this->model->get_links(array(
+			'order' => array(
+				'link_id' => 'ASC',
+				'order' => 'ASC'
+			)
+		));
 
 		foreach ($links as & $link)
 		{

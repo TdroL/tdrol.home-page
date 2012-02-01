@@ -53,7 +53,7 @@ class Controller_Admin_Link extends Controller_Admin {
 				$model->set_safe($this->request->post());
 				$model->save();
 
-				//HTTP::redirect(302, $location);
+				HTTP::redirect(302, $location);
 			}
 			catch (Jelly_Validation_Exception $e)
 			{
