@@ -9,10 +9,8 @@ class Jelly_Model extends Jelly_Core_Model {
 			$values = array($values => $value);
 		}
 
-		$fields = $this->_meta->fields();
+		unset($values[$this->_meta->primary_key()]);
 
-		unset($fields[$this->_meta->primary_key()]);
-
-		return $this->set(Arr::extract($values, array_keys($fields)));
+		return $this->set($values);
 	}
 }

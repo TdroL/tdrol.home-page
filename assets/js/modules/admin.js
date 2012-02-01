@@ -1,14 +1,20 @@
 window.jQuery && jQuery(function ($) {
-
+	"use strict";
 	var $closeButton = $('<a>', {
-			'text': 'x',
+			'text': '×',
 			'class': 'close',
 			'title': 'Close'
 		}),
-		$dataTable = $('table');
+		$dataTable = $('table.table');
 
-	$(document).on('click', '.alert-message .close', function () {
-		$(this).closest('.alert-message').remove();
+	$(document).on('click', '.alert .close', function () {
+		$(this).closest('.alert')
+		.animate({
+			opacity: 0
+		}, 150).queue(function () {
+			$(this).remove();
+		});
+
 	}).on('click', 'td a[href^=#]', function (e) {
 		$(this.hash).addClass('target');
 		e.preventDefault();
@@ -16,5 +22,5 @@ window.jQuery && jQuery(function ($) {
 		$dataTable.find('.target').removeClass('target');
 	});
 
-	$('.alert-message').prepend($closeButton);
+	$('.alert').prepend($closeButton);
 });

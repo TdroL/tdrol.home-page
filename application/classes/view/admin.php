@@ -14,7 +14,7 @@ class View_Admin extends View_Layout {
 			// css
 			->set('head.css.style', 'assets/css/admin.css')
 			// js
-			->set('head.js.modernizr', 'assets/js/modernizr.custom.js')
+			->set('head.js.modernizr', 'assets/js/modernizr-2.0.6.min.js')
 			->set('body.js.plugins', 'assets/js/plugins.js')
 			->set('body.js.admin', 'assets/js/modules/admin.js')
 

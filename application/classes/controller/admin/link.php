@@ -84,7 +84,7 @@ class Controller_Admin_Link extends Controller_Admin {
 
 				HTTP::redirect(302, $location);
 			}
-			catch (Jelly_Validation_Exception $e)
+			catch (Database_Exception $e)
 			{
 				$this->view->errors($e->errors('validation'));
 			}

@@ -1,113 +1,31 @@
-@import 'h5bp-head';
 @import 'compass';
 @import 'bootstrap';
 
 $icons-fff: "../img/icons/ui-icons_ffffff_256x240.png";
 $icons-222: "../img/icons/ui-icons_222222_256x240.png";
 
-html, body {
+body {
+  padding: 40px 0;
   background: #eee;
 }
 
-body {
-  padding-top: 40px;
-}
-
-a, a:visited {
-  color: #0069d6;
-  text-decoration: none;
-  line-height: inherit;
-  font-weight: inherit;
-}
-
-a:hover {
-  color: #00438a;
-  text-decoration: underline;
-}
-
-.container {
-  margin: 0 auto;
-  width: 820px;
+.container-fluid {
+  max-width: 820px;
   padding: 0 20px;
-  @include pie-clearfix;
+  margin: 0 auto;
 }
 
-div[role=main] .container {
+div[role=main] > .container-fluid {
   margin-bottom: 20px;
 }
 
-body > header {
-  position: fixed;
-  z-index: 100;
-  top: 0;
-  width: 100%;
-  height: 40px;
-  color: #fff;
-  @include background(linear-gradient(#333333, #222222));
-
-  $line-height: 38px;
-
-  h1, p, li, a {
-    margin: 0;
-    line-height: $line-height;
-  }
-
-  h1 {
-    font-size: 20px;
-    font-weight: normal;
-    float: left;
-    margin-left: -20px;
-
-    a {
-      display: block;
-      padding: 0 20px;
-
-      &:hover, &:focus {
-        background-color: rgba(255, 255, 255, 0.05);
-        color: #fff;
-      }
-    }
-  }
-
-  a, a:visited, a:hover, a:focus {
-    color: #fff;
-    text-decoration: none;
-  }
-
-  li {
-    float: left;
-    font-size: 0.9em;
-
-    a, a:visited {
-      display: block;
-      padding: 0 10px;
-      color: #bfbfbf;
-    }
-
-    &.active {
-      background-color: #000;
-    }
-
-    &.active a, &:hover a {
-      color: #fff;
-    }
-  }
-
-  .logout {
-    float: right;
-    line-height: 29px;
-    height: 29px;
-    padding: 3px 0 0;
-
-    a {
-      line-height: 1;
-    }
-  }
+body > header .logout {
+  float: right;
 }
 
 body > div[role=main] {
 
-  .container {
+  .container-fluid {
     @include box-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
     @include border-radius(0 0 6px 6px);
     background: #fff;
@@ -127,6 +45,22 @@ body > div[role=main] {
 table th:last-of-type,
 table td:last-of-type {
   text-align: center;
+}
+
+input.btn {
+  vertical-align: baseline;
+  height: 28px;
+}
+
+button.btn {
+  vertical-align: baseline;
+}
+
+input:invalid,
+select:invalid,
+textarea:invalid {
+  border-color: #b94a48;
+  color: #b94a48;
 }
 
 .link-create:before {
@@ -252,4 +186,14 @@ ul.sortable {
   }
 }
 
-@import 'h5bp-tail';
+.form-horizontal .control-group > span.control-label {
+  float: left;
+  width: 140px;
+  padding-top: 5px;
+  text-align: right;
+  font-weight: bold;
+
+  + .controls {
+    padding-top: 5px;
+  }
+}

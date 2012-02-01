@@ -2,15 +2,15 @@
 {{&open}}
   <fieldset>
     {{#has_errors}}
-    <div class="alert-message error"><p>Found errors in form.</p></div>
+    <div class="alert alert-error"><p>Found errors in form.</p></div>
     {{/has_errors}}
 
     {{&field.id}}
 
     {{#fields}}
-    <div class="clearfix{{#error}} error{{/error}}">
+    <div class="control-group{{#error}} error{{/error}}">
       {{&label}}
-      <div class="input">
+      <div class="controls">
         {{&input}}
         {{#error}}
         <span class="help-inline">{{error}}</span>
@@ -19,9 +19,9 @@
     </div>
     {{/fields}}
 
-    <div class="actions">
-      <input type="submit" class="btn primary" value="Save" />
-      <a href="{{url.cancel}}" class="btn danger">Cancel</a>
+    <div class="form-actions">
+      <button class="btn btn-primary">Save</button>
+      <a href="{{url.cancel}}" class="btn">Cancel</a>
     </div>
 
   </fieldset>

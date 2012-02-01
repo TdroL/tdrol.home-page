@@ -18,28 +18,29 @@
 
 <body>
 
-  <header>
-    <div class="container">
-      <h1><a class="brand" href="{{url.base}}">{tdroL}</a></h1>
+  <header class="navbar navbar-inner navbar-fixed-top">
+    <div class="container-fluid">
+      <a class="brand" href="{{url.base}}">{tdroL}</a>
+
       {{#render_header}}
-      <nav>
-        <ul>
+      <nav class="nav-collapse">
+        <ul class="nav">
         {{#nav}}
           <li{{#is_current}} class="active"{{/is_current}}><a href="{{url}}">{{name}}</a></li>
         {{/nav}}
         </ul>
-      </nav>
 
-      <p class="logout">
-        <a href="{{url.logout}}" class="btn danger">Logout</a>
-      </p>
+        <p class="nav-collapse logout">
+          <a href="{{url.logout}}" class="btn btn-danger">Logout</a>
+        </p>
+      </nav>
       {{/render_header}}
     </div>
   </header>
 
 
   <div role="main">
-    <div class="container">
+    <div class="container-fluid">
       {{>content}}
     </div>
   </div>

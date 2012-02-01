@@ -23,13 +23,17 @@ class View_Admin_Link_Create extends View_Admin {
 		$fomg->set('errors', $this->error);
 		$fomg->set('allowed', $fields);
 
-		$fomg->set('class.*', 'xlarge');
-		$fomg->set('class.order', 'mini');
-		$fomg->set('class.desc', 'xxlarge');
-		$fomg->set('class.tools', 'xxlarge');
+		$fomg->set('class.form', 'form-horizontal');
 
-		$fomg->set('attr.desc.rows', 3);
-		$fomg->set('attr.tools.rows', 3);
+		$fomg->set('class.label:all', 'control-label');
+
+		$fomg->set('class.input:all', 'input-xlarge');
+		$fomg->set('class.input.order', 'input-mini');
+		$fomg->set('class.input.desc', 'input-xxlarge');
+		$fomg->set('class.input.tools', 'input-xxlarge');
+
+		$fomg->set('attr.input.desc.rows', 3);
+		$fomg->set('attr.input.tools.rows', 3);
 
 		return $fomg;
 	}

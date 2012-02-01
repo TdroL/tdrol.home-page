@@ -59,12 +59,52 @@ class Model_Link extends Jelly_Model {
 		);
 	}
 
+	public function delete($db = NULL)
+	{
+		if ( ! $this->_loaded)
+		{
+			return parent::delete();
+		}
+
+		$parent = FALSE;
+
+		if ( ! $db)
+		{
+			$db = Database::instance($this->_meta->db());
+			$db->begin();
+			$parent = TRUE;
+		}
+
+		try
+		{
+			foreach ($this->links as $link)
+			{
+				$link->delete();
+			}
+
+			if ($parent)
+			{
+				if (parent::delete())
+				{
+					$db->commit();
+					return TRUE;
+				}
+
+				$db->rollback();
+				return FALSE;
+			}
+		}
+		catch (Exception $e)
+		{
+			$db->rollback();
+			throw $e;
+		}
+	}
+
 	public function save($validation = NULL)
 	{
-		$id = $this->original('id');
-
 		// if updating existing one
-		if ($id !== NULL)
+		if ($this->_loaded)
 		{
 			if ($this->changed('link') OR $this->changed('order'))
 			{
@@ -116,6 +156,10 @@ class Model_Link extends Jelly_Model {
 					$db->rollback();
 					throw $e;
 				}
+			}
+			else
+			{
+				parent::save($validation);
 			}
 		}
 		// if creating new
