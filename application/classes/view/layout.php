@@ -8,7 +8,7 @@ class View_Layout extends Kostache_Layout {
 			// css
 			->set('head.css.style', 'assets/css/style.css')
 			// js
-			->set('head.js.modernizr', 'assets/js/modernizr.custom.js')
+			->set('head.js.modernizr', 'assets/js/modernizr-2.0.6.min.js')
 			->set('body.js.plugins', 'assets/js/plugins.js')
 
 			->set('jquery-cdn', '//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
