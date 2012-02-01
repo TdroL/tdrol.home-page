@@ -104,7 +104,6 @@ Kohana::modules(array(
 	'cache'           => MODPATH.'cache',           // Cache
 	'database-sqlite' => MODPATH.'database-sqlite', // SQLite driver
 	'database'        => MODPATH.'database',        // Database access
-	'orm'             => MODPATH.'orm',             // ORM
 	'kostache'        => MODPATH.'kostache',        // KOstache
 	'yaminify'        => MODPATH.'yaminify',        // Yaminify
 	'yaminify-assets' => MODPATH.'yaminify-assets', // Yaminify - Asset bridge
