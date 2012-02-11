@@ -36,7 +36,7 @@
 	url = git://github.com/TdroL/kohana-yaminify-assets.git
 [submodule "modules/minion"]
 	path = modules/minion
-	url = https://github.com/kohana-minion/core.git
+	url = https://github.com/kohana/minion.git
 [submodule "modules/minion-tools"]
 	path = modules/minion-tools
 	url = git://github.com/TdroL/kohana-minion-tools.git
