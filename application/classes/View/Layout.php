@@ -6,13 +6,13 @@ class View_Layout extends Kostache_Layout {
 	{
 		return Yassets::factory()
 			// css
-			->set('head.css.style', 'assets/css/style.css')
+			->set('head.css.style', 'style.css')
 			// js
-			->set('head.js.modernizr', 'assets/js/modernizr-2.5.2.min.js')
-			->set('body.js.plugins', 'assets/js/plugins.js')
+			->set('head.js.modernizr', 'modernizr-2.5.2.min.js')
+			->set('body.js.plugins', 'plugins.js')
 
 			->set('jquery-cdn', '//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
-			->set('jquery', 'assets/js/jquery-1.7.1.min.js');
+			->set('jquery', 'jquery-1.7.1.min.js');
 	}
 
 	public function env()

@@ -1,16 +1,16 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
 
-class Controller_Admin_Link extends Controller_Base {
+class Controller_Admin_Quote extends Controller_Admin {
 
 	public function action_index() {}
 
 	public function action_create()
 	{
-		$this->view->model = new Model_Link;
+		$this->view->model = new Model_Quote;
 		$model = $this->view->model;
 
 		$location = Route::get('admin')->uri(array(
-			'controller' => 'link'
+			'controller' => 'quote'
 		));
 
 		if ($this->valid_post())
@@ -42,11 +42,11 @@ class Controller_Admin_Link extends Controller_Base {
 
 	public function action_update()
 	{
-		$this->view->model = new Model_Link($this->request->param('id'));
+		$this->view->model = new Model_Quote($this->request->param('id'));
 		$model = $this->view->model;
 
 		$location = Route::get('admin')->uri(array(
-			'controller' => 'link'
+			'controller' => 'quote'
 		));
 
 		if ( ! $model->loaded())
@@ -100,11 +100,11 @@ class Controller_Admin_Link extends Controller_Base {
 
 	public function action_delete()
 	{
-		$this->view->model = new Model_Link($this->request->param('id'));
+		$this->view->model = new Model_Quote($this->request->param('id'));
 		$model = $this->view->model;
 
 		$location = Route::get('admin')->uri(array(
-			'controller' => 'link'
+			'controller' => 'quote'
 		));
 
 		if ( ! $model->loaded())

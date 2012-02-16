@@ -39,7 +39,7 @@ class Controller_Base extends Controller {
 		$actions = array();
 		foreach (get_class_methods($this) as $v)
 		{
-			if (substr($v, 0, 7) != 'action_')
+			if (substr($v, 0, 7) == 'action_')
 			{
 				$actions[] = substr($v, 7);
 			}
@@ -61,15 +61,13 @@ class Controller_Base extends Controller {
 		// if logged in, get user's role
 		if ($this->user = $this->session->get('user'))
 		{
-			$role = $this->user->role
-					? $this->user->role
-					: $role;
+			$role = $this->user->role ?: $role;
 		}
 
 		// check user's privileges
-		if ( ! ($acl->allowed($role, $action, $resource)
-		    OR
-		    $acl->allowed('guest', $action, $resource)))
+		if ( ! $acl->allowed($role, $action, $resource)
+		    AND
+		     ! $acl->allowed('guest', $action, $resource))
 		{
 			// if not logged
 			if ( ! $this->user)
@@ -137,6 +135,9 @@ class Controller_Base extends Controller {
 
 		// Load view model
 		$view_name = strtolower('view_'.$controller.'_'.$action);
+
+		// Add a space after each _, run ucwords, then remove the space.
+		$view_name = str_replace('_ ','_', ucwords(str_replace('_','_ ',$view_name)));
 
 		if (class_exists($view_name))
 		{

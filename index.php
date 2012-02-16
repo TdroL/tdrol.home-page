@@ -116,6 +116,6 @@ else
 	*/
 	echo Request::factory()
 		->execute()
-		->send_headers(TRUE)
+		->send_headers()
 		->body();
 }

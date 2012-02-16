@@ -11,21 +11,24 @@ class View_Admin extends View_Layout {
 	public function assets()
 	{
 		return Yassets::factory()
-			// css
-			->set('head.css.bootstrap', 'assets/css/bootstrap.css')
-			->set('head.css.bootstrap-responsive', 'assets/css/bootstrap-responsive.css')
-			->set('head.css.style', 'assets/css/admin.css')
-			// js
-			->set('head.js.modernizr', 'assets/js/modernizr-2.5.2.min.js')
-			->set('body.js.plugins', 'assets/js/plugins.js')
-			->set('body.js.bootstrap-js', 'assets/js/bootstrap.min.js')
-			->set('body.js.jquery-ui', 'assets/js/jquery-ui-1.8.17.custom.min.js')
-			// admin widgets
-			->set('body.js.widget-link-order', 'assets/js/widgets/link-order.js')
-			->set('body.js.widget-table-hash-jump', 'assets/js/widgets/table-hash-jump.js')
+			/* css */
+			->set('head.css.bootstrap', 'bootstrap.css')
+			->set('head.css.bootstrap-res', 'bootstrap-responsive.css')
+			->set('head.css.style', 'admin.css')
 
+			/* js */
+			// <head>
+			->set('head.js.modernizr', 'modernizr-2.5.2.min.js')
+			// <body>
+			->set('body.js.plugins', 'plugins.js')
+			->set('body.js.bootstrap-js', 'bootstrap.min.js')
+			->set('body.js.jquery-ui', 'jquery-ui-1.8.17.custom.min.js')
+			// admin widgets
+			->set('body.js.widget-link-order', 'widgets/link-order.js')
+			->set('body.js.widget-table-hash-jump', 'widgets/table-hash-jump.js')
+			// jQuery
 			->set('jquery-cdn', '//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
-			->set('jquery', 'assets/js/jquery-1.7.1.min.js');
+			->set('jquery', 'jquery-1.7.1.min.js');
 	}
 
 	public $error = array();
@@ -62,20 +65,22 @@ class View_Admin extends View_Layout {
 
 	public function nav()
 	{
+		$current = strtolower(Request::current()->controller());
+
 		return array(
 			array(
 				'url' => Route::url('admin', array(
 					'controller' => 'link'
 				)),
 				'name' => 'Links',
-				'is_current' => ('link' == Request::current()->controller())
+				'is_current' => ('link' == $current)
 			),
 			array(
 				'url' => Route::url('admin', array(
 					'controller' => 'quote'
 				)),
 				'name' => 'Quotes',
-				'is_current' => ('quote' == Request::current()->controller())
+				'is_current' => ('quote' == $current)
 			),
 		);
 	}
