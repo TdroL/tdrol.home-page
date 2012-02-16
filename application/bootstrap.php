@@ -111,12 +111,12 @@ Kohana::modules(array(
 	'assets'          => MODPATH.'assets',          // Asset
 	'fomg'            => MODPATH.'fomg',            // Fomg
 	// 'image'           => MODPATH.'image',           // Image manipulation
-	//'userguide'       => MODPATH.'userguide',       // Userguide
+	// 'userguide'       => MODPATH.'userguide',       // Userguide
 	// 'unittest'        => MODPATH.'unittest',        // Unit testing
 	));
 
 // Enable minion only on non production
-if (Kohana::$environment != Kohana::PRODUCTION OR PHP_SAPI === 'cli')
+if (Kohana::$environment != Kohana::PRODUCTION OR PHP_SAPI == 'cli')
 {
 	Kohana::modules(Kohana::modules() + array(
 		'minion'          => MODPATH.'minion',

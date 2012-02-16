@@ -35,13 +35,18 @@ class Controller_Admin extends Controller_Base {
 
 		if ($login !== NULL AND $password !== NULL AND $validation->check())
 		{
-			$user = Model::factory('user')->get_user(array(
+			$user = new Model_User(array(
 				'name' => $login,
 			));
 
 			if ($user->loaded() AND $user->check_password($password))
 			{
 				$this->session->set('user', $user);
+
+				if ($this->request->is_initial())
+				{
+					HTTP::redirect(302, Route::get('admin')->uri());
+				}
 			}
 			else
 			{
@@ -56,8 +61,10 @@ class Controller_Admin extends Controller_Base {
 	{
 		$this->session->delete('user');
 
-		throw HTTP_Exception::factory('302')
-			->location(Route::get('admin')->uri());
+		if ($this->request->is_initial())
+		{
+			HTTP::redirect(302, Route::get('admin')->uri());
+		}
 	}
 
 	public function action_notallowed() {}

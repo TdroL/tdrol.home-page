@@ -9,15 +9,21 @@ class Fomg_Field_Tree extends Fomg_Field {
 		$meta = Jelly::meta($this->field->foreign['model']);
 
 		// load options
-		$tree = Model::factory($this->field->foreign['model'])
-			->get_links_tree();
+		$model = 'Model_'.$this->field->foreign['model'];
+		$tree = $model::get_tree();
 
 		$options = array();
 
-		foreach ($tree as $node)
+		foreach ($tree as & $node)
 		{
+			if ($this->model->id == $node['id'])
+			{
+				unset($node);
+				continue;
+			}
+
 			$options[$node['id']] = $node['name'];
-			$options += $this->_flatten_tree($node['links'], ' &ndash; ');
+			$options += $this->_flatten_tree($node['links'], '&nbsp;&nbsp;&ndash; ', $this->model->id);
 		}
 
 		// add empty (null) option
@@ -32,17 +38,23 @@ class Fomg_Field_Tree extends Fomg_Field {
 		return Form::select($name, $options, $value, $attr);
 	}
 
-	protected function _flatten_tree(array $tree, $tab = '  ')
+	protected function _flatten_tree(array $tree, $tab = '&nbsp;&nbsp;&nbsp;', $ignore_id = NULL)
 	{
 		$options = array();
 
-		foreach ($tree as $node)
+		foreach ($tree as &$node)
 		{
+			if ($this->model->id == $node['id'])
+			{
+				unset($node);
+				continue;
+			}
+
 			$options[$node['id']] = $tab.$node['name'];
 
 			if ( ! empty($node['links']))
 			{
-				$options += $this->_flatten_tree($node['links'], '  '.$tab);
+				$options += $this->_flatten_tree($node['links'], '&nbsp;&nbsp;&nbsp;'.$tab, $ignore_id);
 			}
 		}
 

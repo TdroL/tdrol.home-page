@@ -1,57 +1,86 @@
 <!doctype html>
 <html class="no-js" lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Admin{{#head.title}} - {{head.title}}{{/head.title}}</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta charset="utf-8">
+	<title>Admin{{#head.title}} - {{head.title}}{{/head.title}}</title>
+	<meta name="viewport" content="width=device-width">
 
-  <meta name="robots" content="noindex">
+	<meta name="robots" content="noindex">
 
-  {{#assets.head.css}}
-  <link rel="stylesheet" href="{{.}}">
-  {{/assets.head.css}}
+	{{#assets.head.css}}
+	<link rel="stylesheet" href="{{.}}">
+	{{/assets.head.css}}
 
-  {{#assets.head.js}}
-  <script src="{{.}}"></script>
-  {{/assets.head.js}}
+	{{#assets.head.js}}
+	<script src="{{.}}"></script>
+	{{/assets.head.js}}
 </head>
 
 <body>
+	<header class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				{{#render_header}}
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				{{/render_header}}
+				<a class="brand" href="{{url.base}}">{tdroL}</a>
 
-  <header class="navbar navbar-inner navbar-fixed-top">
-    <div class="container-fluid">
-      <a class="brand" href="{{url.base}}">{tdroL}</a>
+				{{#render_header}}
+				<nav class="nav-collapse">
+					<ul class="nav">
+					{{#nav}}
+						<li{{#is_current}} class="active"{{/is_current}}><a href="{{url}}">{{name}}</a></li>
+					{{/nav}}
+					</ul>
 
-      {{#render_header}}
-      <nav class="nav-collapse">
-        <ul class="nav">
-        {{#nav}}
-          <li{{#is_current}} class="active"{{/is_current}}><a href="{{url}}">{{name}}</a></li>
-        {{/nav}}
-        </ul>
+					<p class="logout">
+						<a href="{{url.logout}}" class="btn btn-danger">Logout</a>
+					</p>
+				</nav>
+				{{/render_header}}
+			</div>
+		</div>
+	</header>
 
-        <p class="nav-collapse logout">
-          <a href="{{url.logout}}" class="btn btn-danger">Logout</a>
-        </p>
-      </nav>
-      {{/render_header}}
-    </div>
-  </header>
+<!--
+	<header class="navbar navbar-inner navbar-fixed-top">
+		<div class="container-fluid">
+			<a class="brand" href="{{url.base}}">{tdroL}</a>
 
+			{{#render_header}}
+			<nav class="nav-collapse">
+				<ul class="nav">
+				{{#nav}}
+					<li{{#is_current}} class="active"{{/is_current}}><a href="{{url}}">{{name}}</a></li>
+				{{/nav}}
+				</ul>
 
-  <div role="main">
-    <div class="container-fluid">
-      {{>content}}
-    </div>
-  </div>
+				<p class="nav-collapse logout">
+					<a href="{{url.logout}}" class="btn btn-danger">Logout</a>
+				</p>
+			</nav>
+			{{/render_header}}
+		</div>
+	</header>
+-->
 
-  {{#env.development}}{{&profiler}}{{/env.development}}
+	<div role="main">
+		<div class="container-fluid">
+			{{>content}}
+		</div>
+	</div>
 
-  <script src="{{assets.id.jquery-cdn}}"></script>
-  <script>window.jQuery || document.write('<script src="{{assets.id.jquery}}"><\/script>')</script>
+	{{#env.development}}{{&profiler}}{{/env.development}}
 
-  {{#assets.body.js}}
-  <script defer src="{{.}}"></script>
-  {{/assets.body.js}}
+	<script src="{{assets.id.jquery-cdn}}"></script>
+	<script>window.jQuery || document.write('<script src="{{assets.id.jquery}}"><\/script>')</script>
+
+	{{#assets.body.js}}
+	<script defer src="{{.}}"></script>
+	{{/assets.body.js}}
 </body>
 </html>

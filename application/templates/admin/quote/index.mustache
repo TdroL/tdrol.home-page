@@ -1,4 +1,4 @@
-<h2>Links <small>index</small></h2>
+<h2>Quote <small>index</small></h2>
 
 {{#flash}}
 <div class="alert alert-{{type}}">
@@ -8,29 +8,22 @@
 {{/flash}}
 
 <p>
-	<a href="{{url.create}}" class="btn btn-primary btn-create">Add new link</a>
+	<a href="{{url.create}}" class="btn btn-primary btn-create">Add new quote</a>
 </p>
 
-<table id="links-index" class="table">
+<table id="quote-index" class="table">
 	<thead>
 		<tr>
 			<th>#</th>
-			<th>Name</th>
-			<th>Title</th>
-			<th>Parent</th>
+			<th>Body</th>
 			<th>Actions</th>
 		</tr>
 	</thead>
 	<tbody>
 		{{#items}}
-		<tr id="link-{{id}}">
+		<tr>
 			<td>{{id}}</td>
-			<td><a href="{{url}}">{{name}}</a></td>
-			<td title="{{title}}">{{title-short}}</td>
-			<td>
-				{{#link}}<a href="#link-{{id}}" title="{{name}} - {{title}}">#{{id}}</a>{{/link}}
-				{{^link}}--{{/link}}
-			</td>
+			<td title="{{body}}">{{body}}</td>
 			<td>
 				<a href="{{urls.update}}" class="btn btn-update" data-label="Update"><span>Update</span></a>
 				<a href="{{urls.delete}}" class="btn btn-delete" data-label="Delete"><span>Delete</span></a>

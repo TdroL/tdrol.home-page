@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
 
-class View_Admin_Link_Delete extends View_Admin {
+class View_Admin_Quote_Delete extends View_admin {
 
 	public function label()
 	{
@@ -14,10 +14,7 @@ class View_Admin_Link_Delete extends View_Admin {
 
 	public function value()
 	{
-		$values = $this->model->as_array();
-		$values['links'] = $values['links']->as_array();
-		$values['has_links'] = ! empty($values['links']);
-		return $values;
+		return $this->model->as_array();
 	}
 
 	public function form()
@@ -25,7 +22,7 @@ class View_Admin_Link_Delete extends View_Admin {
 		$fomg = new Fomg($this->model);
 
 		$url_cancel = Route::url('admin', array(
-			'controller' => 'link'
+			'controller' => 'quote'
 		));
 
 		$fomg->set('url.cancel', $url_cancel);
@@ -35,4 +32,5 @@ class View_Admin_Link_Delete extends View_Admin {
 
 		return $fomg;
 	}
+
 }

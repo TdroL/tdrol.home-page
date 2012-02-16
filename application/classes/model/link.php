@@ -200,12 +200,7 @@ class Model_Link extends Jelly_Model {
 		return $this;
 	}
 
-	public function get_link(array $where = array())
-	{
-		return NULL;
-	}
-
-	public function get_links(array $options = array())
+	public static function get_all(array $options = array())
 	{
 		$links = Jelly::query('link')
 			->with('link');
@@ -250,7 +245,7 @@ class Model_Link extends Jelly_Model {
 		return $result;
 	}
 
-	public function get_links_tree(array $fields = NULL, $non_parents = FALSE)
+	public static function get_tree(array $fields = NULL, $non_parents = FALSE)
 	{
 		$result = array();
 		$collection = Jelly::query('link')

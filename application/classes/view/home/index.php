@@ -10,7 +10,7 @@ class View_Home_Index extends View_Layout {
 
 	public function render()
 	{
-		$links = $this->model->get_links_tree();
+		$links = Model_Link::get_tree();
 
 		$this->links = $this->_prepare_links($links);
 

@@ -1,58 +1,61 @@
-<h2>Links <small>Delete</small></h2>
+<h2>Links <small>delete</small></h2>
 
 {{&form.open}}
-		{{#has_errors}}
-		<div class="alert alert-error"><p>Found errors in form.</p></div>
-		{{/has_errors}}
+	{{#has_errors}}
+	<div class="alert alert-error">
+		<a class="close" data-dismiss="alert" href="#">&times;</a>
+		Found errors in form.
+	</div>
+	{{/has_errors}}
 
-		<div class="control-group">
-			<span class="control-label">{{label.name}}</span>
-			<div class="controls">
-				{{value.name}}
-			</div>
+	<div class="control-group">
+		<span class="control-label">{{label.name}}</span>
+		<div class="controls">
+			{{value.name}}
 		</div>
+	</div>
 
-		<div class="control-group">
-			<span class="control-label">{{label.url}}</span>
-			<div class="controls">
-				<a href="{{value.url}}">{{value.url}}</a>
-			</div>
+	<div class="control-group">
+		<span class="control-label">{{label.url}}</span>
+		<div class="controls">
+			<a href="{{value.url}}">{{value.url}}</a>
 		</div>
+	</div>
 
-		<div class="control-group">
-			<span class="control-label">{{label.links}}</span>
-			<div class="controls">
-				{{#value.has_links}}
-				<ul>
-					{{#value.links}}
-					<li>{{name}} (<a href="{{url}}">{{url}}</a>)</li>
-					{{/value.links}}
-				</ul>
-				{{/value.has_links}}
-				{{^value.has_links}}
-					<em>None</em>
-				{{/value.has_links}}
-			</div>
+	<div class="control-group">
+		<span class="control-label">{{label.links}}</span>
+		<div class="controls">
+			{{#value.has_links}}
+			<ul>
+				{{#value.links}}
+				<li>{{name}} (<a href="{{url}}">{{url}}</a>)</li>
+				{{/value.links}}
+			</ul>
+			{{/value.has_links}}
+			{{^value.has_links}}
+				<em>None</em>
+			{{/value.has_links}}
 		</div>
+	</div>
 
-		<div class="control-group">
-			<span class="control-label">{{label.desc}}</span>
-			<div class="controls">
-				{{value.desc}}
-				{{^value.desc}}<em>Empty</em>{{/value.desc}}
-			</div>
+	<div class="control-group">
+		<span class="control-label">{{label.desc}}</span>
+		<div class="controls">
+			{{value.desc}}
+			{{^value.desc}}<em>Empty</em>{{/value.desc}}
 		</div>
+	</div>
 
-		<div class="control-group">
-			<span class="control-label">{{label.tools}}</span>
-			<div class="controls">
-				{{value.tools}}
-				{{^value.tools}}<em>Empty</em>{{/value.tools}}
-			</div>
+	<div class="control-group">
+		<span class="control-label">{{label.tools}}</span>
+		<div class="controls">
+			{{value.tools}}
+			{{^value.tools}}<em>Empty</em>{{/value.tools}}
 		</div>
+	</div>
 
-		<div class="form-actions">
-			<button class="btn btn-danger">Remove</button>
-			<a href="{{url.cancel}}" class="btn">Cancel</a>
-		</div>
+	<div class="form-actions">
+		<button class="btn btn-danger">Remove</button>
+		<a href="{{form.url.cancel}}" class="btn">Cancel</a>
+	</div>
 {{&form.close}}

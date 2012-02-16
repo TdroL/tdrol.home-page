@@ -6,26 +6,21 @@ class View_Admin_Link_Create extends View_Admin {
 		'form' => 'admin/link/_form'
 	);
 
-	public function assets()
-	{
-		return parent::assets()
-			->set('body.js.jquery-ui', 'assets/js/jquery-ui-1.8.17.custom.min.js')
-			->set('body.js.admin-link', 'assets/js/modules/admin-link.js');
-	}
-
 	public function form()
 	{
 		$fomg = new Fomg($this->model);
 
+		$url_cancel = Route::url('admin', array(
+			'controller' => 'link'
+		));
+
 		$fields = array('url', 'name', 'title', 'link', 'order', 'desc', 'tools');
 
-		$fomg->set('url.cancel', Route::url('admin'));
+		$fomg->set('url.cancel', $url_cancel);
 		$fomg->set('errors', $this->error);
 		$fomg->set('allowed', $fields);
 
 		$fomg->set('class.form', 'form-horizontal');
-
-		$fomg->set('class.label:all', 'control-label');
 
 		$fomg->set('class.input:all', 'input-xlarge');
 		$fomg->set('class.input.order', 'input-mini');

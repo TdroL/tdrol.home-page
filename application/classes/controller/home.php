@@ -3,10 +3,7 @@
 class Controller_Home extends Controller_Base
 {
 
-	public function action_index()
-	{
-		$this->view->model = new Model_Link;
-	}
+	public function action_index() {}
 
 }
 

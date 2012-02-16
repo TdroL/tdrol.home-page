@@ -1,12 +1,14 @@
 @import 'compass';
-@import 'bootstrap';
 
 $icons-fff: "../img/icons/ui-icons_ffffff_256x240.png";
 $icons-222: "../img/icons/ui-icons_222222_256x240.png";
 
 body {
-  padding: 40px 0;
   background: #eee;
+  overflow-y: scroll;
+  @media only screen and (min-width: 60em) {
+    padding: 40px 0;
+  }
 }
 
 .container-fluid {
@@ -19,7 +21,7 @@ div[role=main] > .container-fluid {
   margin-bottom: 20px;
 }
 
-body > header .logout {
+.navbar .logout {
   float: right;
 }
 
@@ -42,18 +44,34 @@ body > div[role=main] {
   }
 }
 
-table th:last-of-type,
-table td:last-of-type {
-  text-align: center;
-}
+/* #Fixing bootstrap */
 
 input.btn {
-  vertical-align: baseline;
+  vertical-align: top;
   height: 28px;
 }
 
 button.btn {
-  vertical-align: baseline;
+  vertical-align: top;
+}
+
+.input-xlarge,
+.input-xxlarge {
+  width: 100%;
+  display: block;
+  @include box-sizing(border-box);
+}
+
+input {
+  height: 18px + 4px*2;
+}
+
+.input-xlarge {
+  max-width: 270px;
+}
+
+.input-xxlarge {
+  max-width: 530px;
 }
 
 input:invalid,
@@ -63,7 +81,9 @@ textarea:invalid {
   color: #b94a48;
 }
 
-.link-create:before {
+/* /Fixing bootstrap */
+
+.btn-create:before {
   display: inline-block;
   content: "";
   height: 14px;
@@ -72,12 +92,12 @@ textarea:invalid {
   background: url($icons-fff) -32px -128px no-repeat;
 }
 
-.link-update, .link-delete {
+.btn-update, .btn-delete {
   position: relative;
   width: 16px;
   line-height: 16px;
   padding: 4px;
-  margin: 0 4px;
+  margin: 4px;
 
   &[data-label]:after {
     display: none;
@@ -129,11 +149,11 @@ textarea:invalid {
 }
 
 
-.link-update span {
+.btn-update span {
   background-position: -64px -112px;
 }
 
-.link-delete span {
+.btn-delete span {
   background-position: -176px -96px;
 }
 
@@ -142,12 +162,35 @@ tr {
   &[id]:target, &.target {
     background: #f5f5f5;
   }
+
+  th:last-of-type,
+  td:last-of-type {
+    text-align: center;
+    word-spacing: -0.2em;
+  }
+
+  @media only screen and (min-width: 60em) {
+    /* "#" field */
+    th:first-of-type,
+    td:first-of-type {
+      width: 3em;
+      text-overflow: ellipsis;
+    }
+
+    /* "Actions" field */
+    th:last-of-type,
+    td:last-of-type {
+      width: 2*34px+4px;
+    }
+  }
 }
 
 ul.sortable {
   list-style: none;
   margin: 0;
   padding: 0;
+  $width: 270px;
+  max-width: $width;
 
   li {
     $indent: 20px;
@@ -156,7 +199,7 @@ ul.sortable {
     border: 1px solid lighten(#000, 70%);
     padding: 4px 4px 4px 4px + $indent;
     margin: 3px 0;
-    width: 270px - $indent;
+    max-width: $width - $indent;
     height: 18px;
     @include border-radius(4px);
     @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.1));
@@ -168,7 +211,7 @@ ul.sortable {
     &.movable {
       cursor: move;
       padding: 4px;
-      width: 270px;
+      max-width: $width;
       color: #fff;
       background: #F39814;
       border-color: #F39814;
@@ -195,5 +238,14 @@ ul.sortable {
 
   + .controls {
     padding-top: 5px;
+  }
+}
+
+
+.kohana {
+  display: none;
+
+  @media only screen and (min-width: 60em) {
+    display: block;
   }
 }

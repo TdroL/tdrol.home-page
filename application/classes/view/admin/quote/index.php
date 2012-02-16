@@ -1,28 +1,22 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
 
-class View_Admin_Link_Index extends View_Admin {
+class View_Admin_Quote_Index extends View_admin {
 
 	public function items()
 	{
-		$items = Model_Link::get_all(array(
-			'order' => array(
-				'link_id' => 'asc',
-				'order' => 'asc'
-			)
-		));
+		$items = Model_Quote::get_all();
 
 		foreach ($items as & $item)
 		{
-			$item['title-short'] = Text::limit_chars($item['title'], 40);
-
+			$item['body'] = strip_tags($item['body']);
 			$item['urls'] = array(
 				'update' => Route::url('admin', array(
-					'controller' => 'link',
+					'controller' => 'quote',
 					'action'     => 'update',
 					'id'         => $item['id']
 				)),
 				'delete' => Route::url('admin', array(
-					'controller' => 'link',
+					'controller' => 'quote',
 					'action'     => 'delete',
 					'id'         => $item['id']
 				))
@@ -36,9 +30,10 @@ class View_Admin_Link_Index extends View_Admin {
 	{
 		return parent::url() + array(
 			'create' => Route::url('admin', array(
-				'controller' => 'link',
+				'controller' => 'quote',
 				'action' => 'create'
 			))
 		);
 	}
+
 }

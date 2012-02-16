@@ -15,23 +15,6 @@ class Model_User extends Jelly_Model {
 		));
 	}
 
-	public function get_user($where)
-	{
-		$user = Jelly::query('user')->limit(1);
-
-		if ( ! Arr::is_array($where))
-		{
-			$where = array('id' => $where);
-		}
-
-		foreach ($where as $key => $value)
-		{
-			$user->where($key, '=', $value);
-		}
-
-		return $user->select();
-	}
-
 	public function check_password($password)
 	{
 		$bonafide = Bonafide::instance();
