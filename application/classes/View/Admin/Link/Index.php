@@ -2,20 +2,22 @@
 
 class View_Admin_Link_Index extends View_Admin {
 
+	public $_params = array(
+		'order' => array(
+			'link' => 'asc',
+			'order' => 'asc'
+		)
+	);
+
 	public function items()
 	{
-		$items = Model_Link::get_all(array(
-			'order' => array(
-				'link_id' => 'asc',
-				'order' => 'asc'
-			)
-		));
+		$items = Jelly::query('link')->get_all($this->_params);
 
 		foreach ($items as & $item)
 		{
 			$item['title-short'] = Text::limit_chars($item['title'], 40);
 
-			$item['urls'] = array(
+			$item['url'] = array(
 				'update' => Route::url('admin', array(
 					'controller' => 'link',
 					'action'     => 'update',
@@ -40,5 +42,11 @@ class View_Admin_Link_Index extends View_Admin {
 				'action' => 'create'
 			))
 		);
+	}
+
+	public function as_json()
+	{
+		$items = $this->items();
+		return array('items' => $items) + parent::as_json();
 	}
 }

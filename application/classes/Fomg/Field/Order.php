@@ -6,7 +6,7 @@ class Fomg_Field_Order extends Fomg_Field {
 	{
 		$name = $this->field->name;
 
-		$tree = Model_Link::get_tree(array('id', 'name', 'order'), TRUE);
+		$tree = Jelly::query('link')->get_tree(array('id', 'name', 'order'), TRUE);
 
 		$attr['type'] = 'number';
 		$attr['data-links'] = json_encode($tree);

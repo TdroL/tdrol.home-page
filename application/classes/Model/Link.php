@@ -8,7 +8,7 @@ class Model_Link extends Jelly_Model {
 
 		$meta->fields(array(
 			'id'      => Jelly::field('primary'),
-			'url'     => Jelly::field('string', array(
+			'target'  => Jelly::field('string', array(
 				'label' => 'URL',
 				'rules' => array(
 					array('not_empty'),
@@ -198,104 +198,6 @@ class Model_Link extends Jelly_Model {
 		}
 
 		return $this;
-	}
-
-	public static function get_all(array $options = array())
-	{
-		$links = Jelly::query('link')
-			->with('link');
-
-		if ($limit = Arr::get($options, 'limit'))
-		{
-			$links->limit($limit);
-		}
-
-		if ($offset = Arr::get($options, 'offset'))
-		{
-			$links->offset($offset);
-		}
-
-		if ($order = Arr::get($options, 'order'))
-		{
-			foreach ($order as $field => $sorting)
-			{
-				$links->order_by($field, $sorting);
-			}
-		}
-		else
-		{
-			$links->order_by('order', 'ASC');
-		}
-
-		$result = array();
-		$fields = array('id', 'url', 'name', 'desc', 'tools', 'title', 'link_id', 'order');
-		foreach ($links->select() as $link)
-		{
-			$link_data = $link->as_array($fields);
-			$link_data['link'] = NULL;
-
-			if ($link->link->loaded())
-			{
-				$link_data['link'] = $link->link->as_array($fields);
-			}
-
-			$result[] = $link_data;
-		}
-
-		return $result;
-	}
-
-	public static function get_tree(array $fields = NULL, $non_parents = FALSE)
-	{
-		$result = array();
-		$collection = Jelly::query('link')
-			->order_by('order', 'ASC')
-			->select();
-		$links = array();
-
-		if ($fields === NULL)
-		{
-			$fields = array('id', 'url', 'name', 'desc', 'tools', 'title', 'link_id', 'order');
-		}
-
-		if ( ! in_array('link_id', $fields))
-		{
-			$fields[] = 'link_id';
-		}
-
-		foreach ($collection as $link)
-		{
-			$links[$link->id] = $link->as_array($fields);
-			$links[$link->id]['links'] = array();
-		}
-
-		foreach ($links as $id => $link)
-		{
-			if ( ! empty($link['link_id']) AND isset($links[$link['link_id']]))
-			{
-				$links[$link['link_id']]['links'][] = &$links[$id];
-			}
-		}
-
-		if ($non_parents)
-		{
-			return $links;
-		}
-		else
-		{
-			$parents = array();
-
-			foreach ($links as $link)
-			{
-				if (empty($link['link_id']))
-				{
-					$parents[] = $link;
-				}
-			}
-
-			return $parents;
-		}
-
 	}
 
 	/**/

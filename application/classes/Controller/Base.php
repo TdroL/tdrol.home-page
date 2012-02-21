@@ -137,7 +137,7 @@ class Controller_Base extends Controller {
 		$view_name = strtolower('view_'.$controller.'_'.$action);
 
 		// Add a space after each _, run ucwords, then remove the space.
-		$view_name = str_replace('_ ','_', ucwords(str_replace('_','_ ',$view_name)));
+		$view_name = str_replace(' ','_', ucwords(str_replace('_',' ',$view_name)));
 
 		if (class_exists($view_name))
 		{
@@ -169,13 +169,18 @@ class Controller_Base extends Controller {
 			if (strpos($accept, 'json') !== FALSE AND method_exists($this->view, 'as_json'))
 			{
 				$this->view = json_encode($this->view->as_json());
+
+				//$this->view = str_replace('\\', '\\\\', $this->view);
 			}
 			// rss: requires as_rss() method in view model
-			elseif (strpos($accept, 'json') !== FALSE AND method_exists($this->view, 'as_rss'))
+			elseif (strpos($accept, 'rss') !== FALSE AND method_exists($this->view, 'as_rss'))
 			{
 				$rss_data = $this->view->as_rss();
 
-				$this->view = Feed::create($rss_data['info'], $rss_data['items']);
+				$info = Arr::get($rss_data, 'info');
+				$items = Arr::get($rss_data, 'items');
+
+				$this->view = Feed::create($info, $items);
 			}
 			// html
 			else
@@ -195,6 +200,7 @@ class Controller_Base extends Controller {
 
 	protected function permissions($acl, $resource)
 	{
+		// allow all - use only for public contents, overload for admin/protected contents
 		return $acl->allow('*');
 	}
 

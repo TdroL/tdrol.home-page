@@ -16,9 +16,9 @@
 	</div>
 
 	<div class="control-group">
-		<span class="control-label">{{label.url}}</span>
+		<span class="control-label">{{label.target}}</span>
 		<div class="controls">
-			<a href="{{value.url}}">{{value.url}}</a>
+			<a href="{{value.target}}">{{value.target}}</a>
 		</div>
 	</div>
 
@@ -28,7 +28,7 @@
 			{{#value.has_links}}
 			<ul>
 				{{#value.links}}
-				<li>{{name}} (<a href="{{url}}">{{url}}</a>)</li>
+				<li>{{name}} (<a href="{{target}}">{{target}}</a>)</li>
 				{{/value.links}}
 			</ul>
 			{{/value.has_links}}

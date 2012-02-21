@@ -31,6 +31,6 @@ window.jQuery && jQuery(function ($) {
 		}
 	};
 
-	view.init();
-	view.init();
+	$.widget = $.widget || {};
+	($.widget.tableHashJump = view.init)();
 });

@@ -28,4 +28,9 @@ class View_Admin_Quote_Create extends View_admin {
 		return $fomg;
 	}
 
+	public function as_json()
+	{
+		$form = $this->form()->as_array();
+		return array('form' => $form) + parent::as_json();
+	}
 }

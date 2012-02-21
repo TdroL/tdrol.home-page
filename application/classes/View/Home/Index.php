@@ -10,16 +10,11 @@ class View_Home_Index extends View_Layout {
 
 	public function render()
 	{
-		$links = Model_Link::get_tree();
+		$links = Jelly::query('link')->get_tree();
 
 		$this->links = $this->_prepare_links($links);
 
 		return parent::render();
-	}
-
-	public function as_json()
-	{
-		return array();
 	}
 
 	public $links = array();

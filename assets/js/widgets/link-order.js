@@ -110,6 +110,6 @@ window.jQuery && jQuery(function ($) {
 		}
 	};
 
-	view.init();
-	view.init();
+	$.widget = $.widget || {};
+	($.widget.linkOrder = view.init)();
 });

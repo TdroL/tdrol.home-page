@@ -2,9 +2,11 @@
 
 class View_Admin_Quote_Index extends View_admin {
 
+	public $_params = array();
+
 	public function items()
 	{
-		$items = Model_Quote::get_all();
+		$items = Jelly::query('quote')->get_all($this->_params);
 
 		foreach ($items as & $item)
 		{
@@ -36,4 +38,9 @@ class View_Admin_Quote_Index extends View_admin {
 		);
 	}
 
+	public function as_json()
+	{
+		$items = $this->items();
+		return array('items' => $items) + parent::as_json();
+	}
 }

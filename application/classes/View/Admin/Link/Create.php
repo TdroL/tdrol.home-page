@@ -14,7 +14,7 @@ class View_Admin_Link_Create extends View_Admin {
 			'controller' => 'link'
 		));
 
-		$fields = array('url', 'name', 'title', 'link', 'order', 'desc', 'tools');
+		$fields = array('target', 'name', 'title', 'link', 'order', 'desc', 'tools');
 
 		$fomg->set('url.cancel', $url_cancel);
 		$fomg->set('errors', $this->error);
@@ -31,5 +31,11 @@ class View_Admin_Link_Create extends View_Admin {
 		$fomg->set('attr.input.tools.rows', 3);
 
 		return $fomg;
+	}
+
+	public function as_json()
+	{
+		$form = $this->form()->as_array();
+		return array('form' => $form) + parent::as_json();
 	}
 }

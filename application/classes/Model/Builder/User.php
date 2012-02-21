@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Model_Builder_User extends Jelly_Core_Builder {
+class Model_Builder_User extends Jelly_Builder {
 
 	public function unique_key($value)
 	{

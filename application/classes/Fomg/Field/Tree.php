@@ -6,11 +6,8 @@ class Fomg_Field_Tree extends Fomg_Field {
 	{
 		$name = $this->field->name;
 
-		$meta = Jelly::meta($this->field->foreign['model']);
-
 		// load options
-		$model = 'Model_'.$this->field->foreign['model'];
-		$tree = $model::get_tree();
+		$tree = Jelly::query($this->field->foreign['model'])->get_tree();
 
 		$options = array();
 

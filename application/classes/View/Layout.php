@@ -8,7 +8,7 @@ class View_Layout extends Kostache_Layout {
 			// css
 			->set('head.css.style', 'style.css')
 			// js
-			->set('head.js.modernizr', 'modernizr-2.5.2.min.js')
+			->set('head.js.modernizr', 'modernizr-2.5.3.min.js')
 			->set('body.js.plugins', 'plugins.js')
 
 			->set('jquery-cdn', '//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
@@ -140,5 +140,28 @@ class View_Layout extends Kostache_Layout {
 		);
 	}
 
+
+	/* Non-HTML renderers */
+	public function as_json()
+	{
+		return array(
+			'error' => __(Kohana::message('common', 'error.not_implemented'))
+		);
+	}
+
+	public function as_rss()
+	{
+		$message = __(Kohana::message('common', 'error.not_implemented'));
+
+		return array(
+			'items' => array(
+				array(
+					'title' => $message,
+					'link' => Url::base(),
+					'description' => $message,
+				)
+			)
+		);
+	}
 }
 

@@ -7,4 +7,8 @@ return array(
 		'updated' => 'Resource updated',
 		'deleted' => 'Resource deleted',
 	),
+	'error' => array(
+		'not_implemented' => 'Not implemented',
+		'internal' => 'Internal error - bad things happened and we don\'t know why :('
+	)
 );
