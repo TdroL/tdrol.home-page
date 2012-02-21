@@ -2,7 +2,7 @@
 
 return array(
 	'development' => array(
-		'type'       => 'pdo',
+		'type'       => 'PDO',
 		'connection' => array(
 			'dsn'        => 'mysql:host=localhost;dbname=kohana-base',
 			'username'   => 'root',
@@ -15,7 +15,7 @@ return array(
 		'profiling'    => TRUE,
 	),
 	'production' => array(
-		'type'       => 'pdo',
+		'type'       => 'PDO',
 		'connection' => array(
 			'dsn'        => 'mysql:host=localhost;dbname=kohana-base',
 			'username'   => '',
@@ -28,7 +28,7 @@ return array(
 		'profiling'    => FALSE,
 	),
 	'sqlite' => array(
-		'type' => 'sqlite',
+		'type' => 'Sqlite',
 		'connection' => array(
 			'dsn' => 'sqlite:'.APPPATH.'db/db.sqlite',
 			'username' => 'user',
