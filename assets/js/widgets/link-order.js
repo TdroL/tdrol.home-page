@@ -6,7 +6,6 @@ window.jQuery && jQuery(function ($) {
 	var listener = {
 		nameChanged: function () {
 			$movable.text($name.val());
-			console.log('nameChanged');
 		},
 		parentChanged: function () {
 			var parentId = +$parent.find(':selected').val(),

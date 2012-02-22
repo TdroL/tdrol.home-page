@@ -1,4 +1,3 @@
-
 window.App = {
 	stack: [],
 	register: function () {
@@ -8,39 +7,64 @@ window.App = {
 
 window.jQuery && jQuery(function ($) {
 
-	var _stack = App.stack;
+	var _stack = App.stack,
+	    $document = $(document),
+	    $window = $(window);
 
 	App = {
 		_controllers: [],
-		_matches: null,
+		pushState: function (data, title, url) {
+			History.pushState(data, title, url);
+		},
+		replaceState: function (data, title, url) {
+			History.replaceState(data, title, url);
+		},
+		getState: function () {
+			return History.getState();
+		},
 		tr: function (text) {
 			return text;
 		},
+		ping: {
+			interval: 5*60*1000, // 5 min
+			callback: function () {
+				$.get(window.pingUrl || '');
+			}
+		},
+		_stopAjaxRequest: false,
 		init: function () {
 			var self = this;
 
-			$(document).off('.app').on('click.app', 'a', function (e) {
+			$document.off('.app').on('click.app', 'a', function (e) {
 				var matches = self._matchRoutes(this.href);
 
 				if (matches) {
-					self._matches = matches;
-					History.pushState(null, self.tr('Loading...'), this.href);
+					self.pushState(null, self.tr('Loading...'), this.href);
 					e.preventDefault();
 					return false;
 				}
 			});
 
-			History.Adapter.bind(window, 'statechange', function() {
-				var state = History.getState(),
+			$window.off('.app').on('statechange.app', function() {
+				if (self._stopAjaxRequest) {
+					self._stopAjaxRequest = false;
+					return;
+				}
+
+				var state = self.getState(),
 				    url = state.url,
-				    matches = this._matches || self._matchRoutes(url);
+				    matches = self._matchRoutes(url);
 
 				if (matches) {
 					self.execute(url, matches.controller, matches.action, matches.params);
 				}
+			}).on('ping.app', function () {
+				self.ping.callback();
 
-				this._matches = null;
-			});
+				setTimeout(function () {
+					$window.trigger('ping.app');
+				}, self.ping.interval);
+			}).trigger('ping.app');
 
 			while (_stack.length) {
 				this.register.apply(this, _stack.shift());
@@ -63,7 +87,7 @@ window.jQuery && jQuery(function ($) {
 						matches.shift(); // remove matched uri
 
 						return {
-							'controller': controller,
+							'controller': controllerId,
 							'action': actionName,
 							'params': matches
 						};
@@ -83,12 +107,14 @@ window.jQuery && jQuery(function ($) {
 		},
 		_req: false,
 		_current: {
-			controller: {},
+			controllerId: -1,
 			actionName: null
 		},
-		execute: function (url, controller, actionName, params) {
+		execute: function (url, controllerId, actionName, params) {
 			var self = this,
-			    data = {};
+			    data = {},
+			    controller = this._controllers[controllerId],
+			    currentController = this._controllers[this._current.controllerId] || {};
 
 			if ( ! (actionName in controller._views)) {
 				data.additional = 'template';
@@ -108,7 +134,7 @@ window.jQuery && jQuery(function ($) {
 				var view = controller._views[actionName],
 				    fullActionName = self._prepareActionName(actionName);
 
-				('beforeRemove' in self._current.controller) && self._current.controller.beforeRemove(self._current.actionName);
+				('beforeRemove' in currentController) && currentController.beforeRemove(self._current.actionName);
 
 				if ('additional' in response) {
 					if ('template' in response.additional) {
@@ -130,12 +156,13 @@ window.jQuery && jQuery(function ($) {
 
 				('afterRender' in controller) && controller.afterRender(actionName);
 
-				self._current.controller = controller;
+				self._current.controllerId = controllerId;
 				self._current.actionName = actionName;
 
 				// fix state's title
-				var state = History.getState();
-				History.replaceState(state.data, response.title || null, state.url);
+				var state = self.getState();
+				self._stopAjaxRequest = true;
+				self.replaceState(state.data, response.title, state.url);
 			}).always(function () {
 				self._req = false;
 			});

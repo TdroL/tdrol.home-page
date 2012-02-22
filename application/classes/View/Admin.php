@@ -102,6 +102,9 @@ class View_Admin extends View_Layout {
 	public function url()
 	{
 		return parent::url() + array(
+			'ping-url' => Route::url('admin', array(
+				'controller' => 'ping'
+			)),
 			'logout' => Route::url('logout')
 		);
 	}

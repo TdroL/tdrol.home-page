@@ -20,7 +20,7 @@ return array(
 		)
 	),
 	'css' => array(
-		'minify' => ! TRUE,
+		'minify' => TRUE,
 		'dir' => 'assets/css',
 		'cache' => TRUE,
 		'driver' => 'default',
