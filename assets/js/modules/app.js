@@ -22,6 +22,9 @@ window.jQuery && jQuery(function ($) {
 		getState: function () {
 			return History.getState();
 		},
+		prevState: function() {
+			History.back();
+		},
 		tr: function (text) {
 			return text;
 		},
@@ -118,11 +121,6 @@ window.jQuery && jQuery(function ($) {
 
 			if ( ! (actionName in controller._views)) {
 				data.additional = 'template';
-
-				controller._views[actionName] = {
-					template: null,
-					partials: []
-				};
 			}
 
 			this._req && this._req.abort();
@@ -131,6 +129,11 @@ window.jQuery && jQuery(function ($) {
 				data: data,
 				dataType: 'json'
 			}).done(function (response) {
+				controller._views[actionName] = controller._views[actionName] || {
+					template: null,
+					partials: []
+				};
+
 				var view = controller._views[actionName],
 				    fullActionName = self._prepareActionName(actionName);
 
@@ -162,7 +165,10 @@ window.jQuery && jQuery(function ($) {
 				// fix state's title
 				var state = self.getState();
 				self._stopAjaxRequest = true;
-				self.replaceState(state.data, response.title, state.url);
+				self.replaceState(state.data, self.title, state.url);
+			}).fail(function() {
+				self._stopAjaxRequest = true;
+				self.prevState();
 			}).always(function () {
 				self._req = false;
 			});
