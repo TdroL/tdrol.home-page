@@ -26,6 +26,10 @@ class Controller_Base extends Controller {
 		// Load view model
 		$view_name = strtolower('view_'.$controller.'_'.$action);
 
+		// Add a space after each _, run ucwords, then remove the space.
+		$view_name = str_replace('_ ','_', ucwords(str_replace('_','_ ',$view_name)));
+
+
 		if (class_exists($view_name))
 		{
 			$this->view = new $view_name;

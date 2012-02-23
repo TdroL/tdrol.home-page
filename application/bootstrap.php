@@ -3,17 +3,17 @@
 // -- Environment setup --------------------------------------------------------
 
 // Load the core Kohana class
-require SYSPATH.'classes/kohana/core'.EXT;
+require SYSPATH.'classes/Kohana/Core'.EXT;
 
-if (is_file(APPPATH.'classes/kohana'.EXT))
+if (is_file(APPPATH.'classes/Kohana'.EXT))
 {
 	// Application extends the core
-	require APPPATH.'classes/kohana'.EXT;
+	require APPPATH.'classes/Kohana'.EXT;
 }
 else
 {
 	// Load empty core extension
-	require SYSPATH.'classes/kohana'.EXT;
+	require SYSPATH.'classes/Kohana'.EXT;
 }
 
 /**
@@ -38,7 +38,15 @@ setlocale(LC_ALL, 'pl_PL.utf-8');
  * @link  http://kohanaframework.org/guide/using.autoloading
  * @link  http://php.net/spl_autoload_register
  */
-spl_autoload_register(array('Kohana', 'auto_load'));
+//spl_autoload_register(array('Kohana', 'auto_load'));
+
+/**
+* Optionally, you can enable a compatibility auto-loader for use with
+* older modules that have not been updated for PSR-0.
+*
+* It is recommended to not enable this unless absolutely necessary.
+*/
+spl_autoload_register(array('Kohana', 'auto_load_lowercase'));
 
 /**
  * Enable the Kohana auto-loader for unserialization.
@@ -104,7 +112,7 @@ Kohana::modules(array(
 	'cache'           => MODPATH.'cache',           // Cache
 	'database-sqlite' => MODPATH.'database-sqlite', // SQLite driver
 	'database'        => MODPATH.'database',        // Database access
-	'jelly'           => MODPATH.'jelly',           // Jelly
+	'jelly'           => MODPATH.'jelly',           // Jelly - an ORM lib
 	'kostache'        => MODPATH.'kostache',        // KOstache
 	'yaminify'        => MODPATH.'yaminify',        // Yaminify
 	'yaminify-assets' => MODPATH.'yaminify-assets', // Yaminify - Asset bridge
@@ -115,7 +123,7 @@ Kohana::modules(array(
 	));
 
 // Enable minion only on non production
-if (Kohana::$environment != Kohana::PRODUCTION OR Kohana::$is_cli)
+if (Kohana::$environment != Kohana::PRODUCTION OR PHP_SAPI === 'cli')
 {
 	Kohana::modules(Kohana::modules() + array(
 		'minion'          => MODPATH.'minion',
