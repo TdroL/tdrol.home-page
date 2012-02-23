@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
 
-class View_Admin_Link_Create extends View_Admin {
+class View_Admin_Link_Create extends View_Admin_Link {
 
 	protected $_partials = array(
 		'form' => 'admin/link/_form'

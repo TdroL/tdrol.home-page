@@ -28,7 +28,7 @@ return array(
 		'profiling'    => FALSE,
 	),
 	'sqlite' => array(
-		'type' => 'Sqlite',
+		'type' => 'SQLite',
 		'connection' => array(
 			'dsn' => 'sqlite:'.APPPATH.'db/db.sqlite',
 			'username' => 'user',

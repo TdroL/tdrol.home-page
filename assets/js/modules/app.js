@@ -165,7 +165,7 @@ window.jQuery && jQuery(function ($) {
 				// fix state's title
 				var state = self.getState();
 				self._stopAjaxRequest = true;
-				self.replaceState(state.data, self.title, state.url);
+				self.replaceState(state.data, response.title, state.url);
 			}).fail(function() {
 				self._stopAjaxRequest = true;
 				self.prevState();

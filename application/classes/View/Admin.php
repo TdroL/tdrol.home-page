@@ -109,6 +109,18 @@ class View_Admin extends View_Layout {
 		);
 	}
 
+	public function head()
+	{
+		$head = parent::head();
+		$class = get_class($this);
+
+		list($view, $directory, $controller, $action) = explode('_', $class, 4);
+
+		$head['title'] = $controller.' '.(empty($action) ? '' : ': '.strtolower($action)).' / '.$directory.' - '.$head['title'];
+
+		return $head;
+	}
+
 	public function as_json()
 	{
 		$result = array();
@@ -128,9 +140,7 @@ class View_Admin extends View_Layout {
 		$result['url'] = $this->url();
 
 		$head = $this->head();
-		$result['title'] = ! empty($head['title'])
-			? 'Admin - '.$head['title']
-			: $head['title'];
+		$result['title'] = Arr::get($head, 'title');
 
 		// additionals
 		$request = Request::current();

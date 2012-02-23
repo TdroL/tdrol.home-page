@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
 
-class View_Admin_Quote_Create extends View_admin {
+class View_Admin_Quote_Create extends View_Admin_Quote {
 
 	protected $_partials = array(
 		'form' => 'admin/quote/_form'

@@ -135,7 +135,7 @@ class View_Layout extends Kostache_Layout {
 	public function url()
 	{
 		return array(
-			'base' => Url::base(),
+			'base' => URL::base(),
 			'current' => Request::initial()->url(),
 		);
 	}

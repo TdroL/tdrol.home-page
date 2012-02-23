@@ -46,7 +46,9 @@ setlocale(LC_ALL, 'pl_PL.utf-8');
 *
 * It is recommended to not enable this unless absolutely necessary.
 */
-spl_autoload_register(array('Kohana', 'auto_load_lowercase'));
+spl_autoload_register(function ($class) {
+	return Kohana::auto_load($class) OR Kohana::auto_load_lowercase($class);
+});
 
 /**
  * Enable the Kohana auto-loader for unserialization.
@@ -112,7 +114,7 @@ Kohana::modules(array(
 	'cache'           => MODPATH.'cache',           // Cache
 	'database-sqlite' => MODPATH.'database-sqlite', // SQLite driver
 	'database'        => MODPATH.'database',        // Database access
-	'jelly'           => MODPATH.'jelly',           // Jelly - an ORM lib
+	'jelly'           => MODPATH.'jelly',           // Jelly
 	'kostache'        => MODPATH.'kostache',        // KOstache
 	'yaminify'        => MODPATH.'yaminify',        // Yaminify
 	'yaminify-assets' => MODPATH.'yaminify-assets', // Yaminify - Asset bridge

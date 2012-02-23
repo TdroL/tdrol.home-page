@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
 
-class View_Admin_Quote_Index extends View_admin {
+class View_Admin_Quote_Index extends View_Admin_Quote {
 
 	public $_params = array();
 
