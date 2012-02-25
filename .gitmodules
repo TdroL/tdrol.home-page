@@ -42,4 +42,4 @@
 	url = git://github.com/TdroL/kohana-minion-tools.git
 [submodule "modules/jelly"]
 	path = modules/jelly
-	url = https://github.com/creatoro/jelly.git
+	url = https://github.com/TdroL/jelly.git
