@@ -5,9 +5,11 @@ window.App = {
 	}
 };
 
-window.jQuery && jQuery(function ($) {
+window.jQuery && jQuery(function _domReadyApp($) {
 
 	var _stack = App.stack,
+	    formsId = 0,
+	    formsSent = [],
 	    $document = $(document),
 	    $window = $(window);
 
@@ -38,7 +40,11 @@ window.jQuery && jQuery(function ($) {
 		init: function () {
 			var self = this;
 
-			$document.off('.app').on('click.app', 'a', function (e) {
+			if ( ! Modernizr.history) {
+				return;
+			}
+
+			$document.off('.app').on('click.app', 'a', function _linksClickHandler(e) {
 				var matches = self._matchRoutes(this.href);
 
 				if (matches) {
@@ -46,9 +52,20 @@ window.jQuery && jQuery(function ($) {
 					e.preventDefault();
 					return false;
 				}
+			}).on('submit.app', 'form', function _formsSubmitHandler(e) {
+				var matches = self._matchRoutes(this.href);
+
+				if (matches) {
+					self.pushState({
+						formData: $(this).serialize(),
+						formId: formsId++
+					}, self.tr('Loading...'), this.href);
+					e.preventDefault();
+					return false;
+				}
 			});
 
-			$window.off('.app').on('statechange.app', function() {
+			$window.off('.app').on('statechange.app', function _historyHandler() {
 				if (self._stopAjaxRequest) {
 					self._stopAjaxRequest = false;
 					return;
@@ -59,14 +76,17 @@ window.jQuery && jQuery(function ($) {
 				    matches = self._matchRoutes(url);
 
 				if (matches) {
-					self.execute(url, matches.controller, matches.action, matches.params);
+					self.execute({
+						url: url,
+						controllerId: matches.controller,
+						actionName: matches.action,
+						params: matches.params
+					});
 				}
-			}).on('ping.app', function () {
+			}).on('ping.app', function _pingHandler() {
 				self.ping.callback();
 
-				setTimeout(function () {
-					$window.trigger('ping.app');
-				}, self.ping.interval);
+				setTimeout($window.trigger.bind($window, 'ping.app'), self.ping.interval);
 			}).trigger('ping.app');
 
 			while (_stack.length) {
@@ -128,7 +148,7 @@ window.jQuery && jQuery(function ($) {
 				url: url,
 				data: data,
 				dataType: 'json'
-			}).done(function (response) {
+			}).done(function _ajaxDone(response) {
 				controller._views[actionName] = controller._views[actionName] || {
 					template: null,
 					partials: []
@@ -146,16 +166,13 @@ window.jQuery && jQuery(function ($) {
 					}
 				}
 
-				var context = response,
-				    rendered = '';
+				var $rendered = $(Mustache.render(view.template, response, view.partials));
 
 				if (fullActionName in controller && $.isFunction( controller[fullActionName])) {
-					context = controller[fullActionName](response, params);
+					$rendered = controller[fullActionName]($rendered, params);
 				}
 
-				rendered = Mustache.render(view.template, context, view.partials);
-
-				(controller.$target || $('body')).html(rendered);
+				(controller.$target || $('body')).html($rendered);
 
 				('afterRender' in controller) && controller.afterRender(actionName);
 
@@ -166,10 +183,10 @@ window.jQuery && jQuery(function ($) {
 				var state = self.getState();
 				self._stopAjaxRequest = true;
 				self.replaceState(state.data, response.title, state.url);
-			}).fail(function() {
+			}).fail(function _ajaxFail() {
 				self._stopAjaxRequest = true;
 				self.prevState();
-			}).always(function () {
+			}).always(function _ajaxAlways() {
 				self._req = false;
 			});
 		}

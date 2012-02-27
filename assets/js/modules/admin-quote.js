@@ -1,4 +1,4 @@
-window.jQuery && jQuery(function ($) {
+window.jQuery && jQuery(function _domReadyAdminQuote($) {
 	"use strict";
 
 	App.register({

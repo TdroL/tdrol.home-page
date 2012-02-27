@@ -1,4 +1,4 @@
-window.jQuery && jQuery(function ($) {
+window.jQuery && jQuery(function _domReadyAdminLink($) {
 	"use strict";
 
 	App.register({
@@ -10,29 +10,20 @@ window.jQuery && jQuery(function ($) {
 		},
 		$target: $('div[role=main] .container-fluid'),
 		$nav: $('header.navbar .nav'),
-		actionIndex: function (response, params) {
-			return response;
+		actionIndex: function ($rendered, params) {
+			$.widget.tableHashJump();
+
+			return $rendered;
 		},
-		actionCreate: function (response, params) {
-			return response;
+		actionCreate: function ($rendered, params) {
+			return this.actionUpdate($rendered, params);
 		},
-		actionUpdate: function (response, params) {
-			return response;
-		},
-		actionDelete: function (response, params) {
-			return response;
+		actionUpdate: function ($rendered, params) {
+			$.widget.linkOrder();
+
+			return $rendered;
 		},
 		afterRender: function (actionName) {
-			switch (actionName) {
-				case 'index':
-					$.widget.tableHashJump();
-				break;
-				case 'create':
-				case 'update':
-					$.widget.linkOrder();
-				break;
-			}
-
 			this.$nav.find('li').removeClass('active').end()
 			         .find('#nav-link').addClass('active');
 		},
