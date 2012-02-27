@@ -114,7 +114,7 @@ class View_Admin extends View_Layout {
 		$head = parent::head();
 		$class = get_class($this);
 
-		list($view, $directory, $controller, $action) = explode('_', $class, 4);
+		list($view, $directory, $controller, $action) = array_pad(explode('_', $class, 4), 4, NULL);
 
 		$head['title'] = $controller.' '.(empty($action) ? '' : ': '.strtolower($action)).' / '.$directory.' - '.$head['title'];
 
