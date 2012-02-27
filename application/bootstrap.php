@@ -134,11 +134,6 @@ if (Kohana::$environment != Kohana::PRODUCTION OR PHP_SAPI === 'cli')
 }
 
 /**
- * Set custom exception handler
- */
-set_exception_handler(array('Controller_Base', 'exception_handler'));
-
-/**
  * Set the cookies salt
  */
 Cookie::$salt = '<random-hash>';

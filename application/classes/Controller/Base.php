@@ -136,19 +136,4 @@ class Controller_Base extends Controller {
 		return Security::check($this->request->post('csfr'));
 	}
 
-	// Helper method: HTTP exceptions handler
-	public static function exception_handler(Exception $e)
-	{
-		switch (strtolower(get_class($e)))
-		{
-			case 'http_exception_404':
-				$response = new Response;
-				$response->status(404);
-				$view = new View_Home_404;
-				echo $response->body($view)->send_headers()->body();
-				return TRUE;
-			default:
-				return Kohana_Exception::handler($e);
-		}
-	}
 }
