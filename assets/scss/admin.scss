@@ -138,6 +138,9 @@ textarea:invalid {
   }
 }
 
+.alert:empty {
+  display: none;
+}
 
 .alert-message {
   p {

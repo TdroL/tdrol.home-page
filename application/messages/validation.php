@@ -23,7 +23,7 @@ return array(
 	'phone'         => ':field must be a phone number',
 	'range'         => ':field must be within the range of :param2 to :param3',
 	'regex'         => ':field does not match the required format',
-	'url'           => ':field must be a url',
+	'url'           => ':field must be a valid url',
 	// custom
 	'is_related'    => ':field must be chosen from available options',
 );

@@ -27,6 +27,8 @@ class View_Admin_Link_Create extends View_Admin_Link {
 		$fomg->set('class.input.desc', 'input-xxlarge');
 		$fomg->set('class.input.tools', 'input-xxlarge');
 
+		$fomg->set('class.label:all', 'control-label');
+
 		$fomg->set('attr.input.desc.rows', 3);
 		$fomg->set('attr.input.tools.rows', 3);
 

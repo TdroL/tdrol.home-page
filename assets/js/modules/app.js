@@ -8,26 +8,28 @@ window.App = {
 window.jQuery && jQuery(function _domReadyApp($) {
 
 	var _stack = App.stack,
-	    formsId = 0,
-	    formsSent = [],
 	    $document = $(document),
 	    $window = $(window);
 
 	App = {
 		_controllers: [],
 		pushState: function (data, title, url) {
-			History.pushState(data, title, url);
+			window.history.pushState(data, title, url);
 		},
 		replaceState: function (data, title, url) {
-			History.replaceState(data, title, url);
+			window.history.replaceState(data, title, url);
 		},
 		getState: function () {
-			return History.getState();
+			return window.history.state || {
+				url: location.href,
+				title: document.title,
+				data: null
+			};
 		},
 		prevState: function() {
-			History.back();
+			window.history.back();
 		},
-		tr: function (text) {
+		tr: function (text) { // translate; TODO: implement
 			return text;
 		},
 		ping: {
@@ -36,7 +38,6 @@ window.jQuery && jQuery(function _domReadyApp($) {
 				$.get(window.pingUrl || '');
 			}
 		},
-		_stopAjaxRequest: false,
 		init: function () {
 			var self = this;
 
@@ -48,36 +49,40 @@ window.jQuery && jQuery(function _domReadyApp($) {
 				var matches = self._matchRoutes(this.href);
 
 				if (matches) {
-					self.pushState(null, self.tr('Loading...'), this.href);
+					self.execute({
+						url: this.href,
+						controllerId: matches.controller,
+						actionName: matches.action,
+						params: matches.params
+					});
+
 					e.preventDefault();
 					return false;
 				}
 			}).on('submit.app', 'form', function _formsSubmitHandler(e) {
-				var matches = self._matchRoutes(this.href);
+				var matches = self._matchRoutes(this.action);
 
 				if (matches) {
-					self.pushState({
-						formData: $(this).serialize(),
-						formId: formsId++
-					}, self.tr('Loading...'), this.href);
+					self.executeForm({
+						url: this.action,
+						controllerId: matches.controller,
+						actionName: matches.action,
+						params: matches.params,
+						data: $(this).serialize()
+					});
+
 					e.preventDefault();
 					return false;
 				}
 			});
 
 			$window.off('.app').on('statechange.app', function _historyHandler() {
-				if (self._stopAjaxRequest) {
-					self._stopAjaxRequest = false;
-					return;
-				}
-
 				var state = self.getState(),
-				    url = state.url,
-				    matches = self._matchRoutes(url);
+				    matches = self._matchRoutes(state.url);
 
 				if (matches) {
 					self.execute({
-						url: url,
+						url: state.url,
 						controllerId: matches.controller,
 						actionName: matches.action,
 						params: matches.params
@@ -133,19 +138,29 @@ window.jQuery && jQuery(function _domReadyApp($) {
 			controllerId: -1,
 			actionName: null
 		},
-		execute: function (url, controllerId, actionName, params) {
+		execute: function (options) {
 			var self = this,
-			    data = {},
-			    controller = this._controllers[controllerId],
-			    currentController = this._controllers[this._current.controllerId] || {};
+			    url = options.url || null,
+			    controllerId = options.controllerId || null,
+			    actionName = options.actionName || null,
+			    params = options.params || {},
+			    data = options.data || {},
+			    type = options.type || 'GET',
+			    controller = this._controllers[controllerId] || null,
+			    currentController = this._controllers[this._current.controllerId] || null;
+
+			if ( ! controller) {
+				return false;
+			}
 
 			if ( ! (actionName in controller._views)) {
-				data.additional = 'template';
+				url += (url.indexOf('?') >= 0 ? '&' : '?')+'additional=template'
 			}
 
 			this._req && this._req.abort();
 			this._req = $.ajax({
 				url: url,
+				type: type,
 				data: data,
 				dataType: 'json'
 			}).done(function _ajaxDone(response) {
@@ -154,16 +169,29 @@ window.jQuery && jQuery(function _domReadyApp($) {
 					partials: []
 				};
 
+				if (self._current.controllerId < 0) {
+					self._current.controllerId = controllerId;
+					self._current.actionName = actionName;
+				}
+
 				var view = controller._views[actionName],
 				    fullActionName = self._prepareActionName(actionName);
 
-				('beforeRemove' in currentController) && currentController.beforeRemove(self._current.actionName);
+				(currentController && 'beforeRemove' in currentController) && currentController.beforeRemove(self._current.actionName);
 
 				if ('additional' in response) {
 					if ('template' in response.additional) {
 						view.template = response.additional.template;
 						view.partials = response.additional.partials || [];
 					}
+				}
+
+				if (response.error) {
+					response.has_errors = true;
+
+					self._formErrors(response);
+
+					return;
 				}
 
 				var $rendered = $(Mustache.render(view.template, response, view.partials));
@@ -181,13 +209,39 @@ window.jQuery && jQuery(function _domReadyApp($) {
 
 				// fix state's title
 				var state = self.getState();
-				self._stopAjaxRequest = true;
-				self.replaceState(state.data, response.title, state.url);
+				self.pushState(state.data, response.title, state.url);
 			}).fail(function _ajaxFail() {
-				self._stopAjaxRequest = true;
 				self.prevState();
 			}).always(function _ajaxAlways() {
 				self._req = false;
+			});
+		},
+		executeForm: function (options) {
+			options.type = 'POST';
+			return this.execute(options);
+		},
+		_formErrors: function (response) {
+			var currentController = self._controllers[self._current.controllerId],
+			    view = currentController._views[self._current.actionName],
+			    $rendered = $(Mustache.render(view.template, response, view.partials));
+
+			(currentController.$target.find('fieldset:first') || $('body')).prepend($rendered.find('.alert'));
+
+			var $form = (currentController.$target || $('body')).find('form'),
+			    id = $form.attr('id');
+
+			$form.find('.controls').each(function () {
+				var $this = $(this),
+				    $input = $this.find(' > [id^='+id+']');
+
+				if ($input.length) {
+					var name = $input.attr('id').replace(id+'-', '');
+
+					if (name in response.error) {
+						$this.closest('.control-group').addClass('error');
+						$this.find('.help-inline').html(response.error[name]);
+					}
+				}
 			});
 		}
 	};

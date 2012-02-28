@@ -23,6 +23,8 @@ class View_Admin_Quote_Create extends View_Admin_Quote {
 		$fomg->set('class.form', 'form-horizontal');
 		$fomg->set('class.input:all', 'input-xxlarge');
 
+		$fomg->set('class.label:all', 'control-label');
+
 		$fomg->set('attr.input.body.rows', '3');
 
 		return $fomg;
