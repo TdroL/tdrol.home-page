@@ -51,7 +51,7 @@ return array(
 		)
 	),
 	'js' => array(
-		'minify' => ! TRUE,
+		'minify' => TRUE,
 		'dir' => 'assets/js',
 		'cache' => TRUE,
 		'driver' => 'closure',

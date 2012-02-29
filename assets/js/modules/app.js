@@ -1,10 +1,171 @@
-window.App = {
-	stack: [],
-	register: function () {
-		this.stack.push([].splice.call(arguments));
-	}
-};
+;(function _App($, window, document, undefined) {
 
+	var a = {}; // App object
+	    controllers = [],
+	    $document = $(document),
+	    $window = $(window);
+
+	window.App = a;
+	a.controllers = controllers;
+	a.register = function (controller) {
+		controllers.push(controller);
+	};
+
+	a.init = function () {
+		a.bindEvents();
+
+		a.ping.run();
+
+		// execute controller#action for current page
+		var matches = a.matchRoutes(window.location.href);
+
+		if (matches) {
+			a.execute({});
+		}
+	};
+
+	a.execute = function (options) {
+		options = $.extend({
+			// defaults options
+		}, options);
+		// TODO: implement this
+	};
+
+	a.bindEvents = function () {
+		//
+	};
+
+	/* ajax loader */
+	var req = null;
+	a.loadData = function (options) {
+		options = $.extend({
+			url: null,
+			type: 'POST',
+			data: null
+		}, options);
+
+		// find controller and action for target url
+		var matched = a.matchRoutes(options.url);
+
+		// if not found, skip rest
+		if ( ! matched) return;
+
+		// abort current/previous request
+		req && req.abort();
+
+		req = $.ajax({
+			url: options.url,
+			type: options.type,
+			data: options.data,
+			dataType: 'json'
+		}).done(function _ajaxDone(response) {
+			// ?
+		}).fail(function _ajaxFail() {
+			// ?
+		}).always(function _ajaxAlways() {
+			req = null;
+		});
+	};
+
+	a.matchRoutes = function (url) {
+		// iterate through every controller
+		for (var i = 0, l = controllers.length; i < l; ++i) {
+			var controller = controllers[i];
+
+			// skip controllers without defined routes
+			if ( ! controller._routes) continue;
+
+			var routes = controller._routes;
+
+			for (var name in routes) {
+				if ( ! routes.hasOwnProperty(name)) continue;
+
+				var route = routes[name], matches;
+
+				// execute/parse route
+				switch ($.type(route)) {
+					case 'string':
+						// TODO: implement string routes
+					break;
+					case 'regexp':
+						matches = url.match(route);
+					break;
+					case 'function':
+						matches = route(url);
+					break;
+				}
+
+				// if route matches url, it should at least has one element - url
+				if (matches) {
+					// remove matched url
+					matches.shift();
+
+					return {
+						i: i, // controller id
+						name: name, // action name
+						matches: matches // matched parts of url
+					};
+				}
+			}
+		}
+
+		return false;
+	};
+
+	/* pinger */
+
+	var pingTimer;
+	a.ping = {
+		interval: 5*60*1000, // 5 min
+		callback: function () {
+			$.get(window.pingUrl || window.location.href);
+		},
+		run: function () {
+			if (pingTimer) {
+				clearInterval(pingTimer);
+			}
+
+			pingTimer = setInterval(this.callback, this.interval);
+		}
+	};
+
+	/* window.history */
+
+	var history = window.history;
+	a.pushState = function (data, title, url) {
+		history.pushState(data, title, url);
+	};
+	a.replaceState = function (data, title, url) {
+		history.replaceState(data, title, url);
+	};
+	a.getState = function () {
+		return history.state || {
+			url: window.location.href,
+			title: document.title,
+			data: null
+		};
+	};
+	a.prevState = function () {
+		history.back();
+	};
+
+
+	/* helpers */
+
+	function prepareActionName(name) {
+		name = name.charAt(0).toUpperCase() + name.substr(1);
+		return 'action' + name;
+	}
+
+	/* jQuery */
+
+	$(function _AppDomReady() {
+		a.init();
+	});
+
+})(jQuery, window, document);
+
+/*
 window.jQuery && jQuery(function _domReadyApp($) {
 
 	var _stack = App.stack,
@@ -12,26 +173,6 @@ window.jQuery && jQuery(function _domReadyApp($) {
 	    $window = $(window);
 
 	App = {
-		_controllers: [],
-		pushState: function (data, title, url) {
-			window.history.pushState(data, title, url);
-		},
-		replaceState: function (data, title, url) {
-			window.history.replaceState(data, title, url);
-		},
-		getState: function () {
-			return window.history.state || {
-				url: location.href,
-				title: document.title,
-				data: null
-			};
-		},
-		prevState: function() {
-			window.history.back();
-		},
-		tr: function (text) { // translate; TODO: implement
-			return text;
-		},
 		ping: {
 			interval: 5*60*1000, // 5 min
 			callback: function () {
@@ -246,5 +387,7 @@ window.jQuery && jQuery(function _domReadyApp($) {
 		}
 	};
 
+
 	App.init();
 });
+	*/
