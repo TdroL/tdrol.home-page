@@ -267,4 +267,5 @@ class Controller_Base extends Controller {
 				return Kohana_Exception::handler($e);
 		}
 	}
+
 }
