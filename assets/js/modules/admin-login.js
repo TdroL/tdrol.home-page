@@ -1,14 +1,13 @@
-window.jQuery && jQuery(function ($) {
-	"use strict";
-
-	App.register({
-		_routes: {},
-		$target: $('div[role=main] .container-fluid'),
-		$nav: $('header.navbar .nav'),
-		afterRender: function (actionName) {
-		},
-		beforeRemove: function (actionName) {
-
-		}
-	});
+App.register({
+	_routes: {},
+	$target: null,
+	$nav: null,
+	init: function() {
+		this.$target = $('div[role=main] .container-fluid');
+		this.$nav =  $('header.navbar .nav');
+	},
+	afterRender: function (actionName) {
+	},
+	beforeRemove: function (actionName) {
+	}
 });

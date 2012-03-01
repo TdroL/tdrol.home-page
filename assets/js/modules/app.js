@@ -1,38 +1,74 @@
 ;(function _App($, window, document, undefined) {
 
 	var a = {}; // App object
-	    controllers = [],
+	    c = [], // controllers list
 	    $document = $(document),
 	    $window = $(window);
 
 	window.App = a;
-	a.controllers = controllers;
+	a.controllers = c;
 	a.register = function (controller) {
-		controllers.push(controller);
+		c.push(controller);
 	};
 
+	function registerExtended(controller) {
+		c.push(controller);
+		controller.init && controller.init();
+	}
+
 	a.init = function () {
+		// execute init method for each controller
+		for (var i = 0, l = c.length; i < l; ++i) {
+			c[i].init && c[i].init();
+		}
+
+		// after dom is ready, add auto-execute of init method to App#register
+		a.register = registerExtended;
+
+		// bind App's events
 		a.bindEvents();
 
-		a.ping.run();
 
-		// execute controller#action for current page
+		// run pinger
+		//a.ping.run();
+
+		// execute controller#action for current page, if has any
 		var matches = a.matchRoutes(window.location.href);
 
 		if (matches) {
-			a.execute({});
+			var controller = c[matches.i];
+			var $content = (controller.$target || $('body')).contents();
+
+			a.execute({
+				'$content': $content,
+				'controller': controller,
+				'action': matches.name,
+				'params': matches.matches
+			});
 		}
 	};
 
 	a.execute = function (options) {
 		options = $.extend({
+			$content: null,
+			controller: {},
+			action: null,
+			params: {}
 			// defaults options
 		}, options);
-		// TODO: implement this
+
+		(options.$content instanceof $) || (options.$content = $(options.$content));
+
+		var fn  = options.controller[prepareActionName(options.action)] || null;
+		if ($.isFunction(fn)) {
+			options.$content = fn(options.$content, options.params);
+		}
+
+		(options.controller.$target || $('body')).empty().append(options.$content);
 	};
 
 	a.bindEvents = function () {
-		//
+		// ...
 	};
 
 	/* ajax loader */
@@ -69,8 +105,8 @@
 
 	a.matchRoutes = function (url) {
 		// iterate through every controller
-		for (var i = 0, l = controllers.length; i < l; ++i) {
-			var controller = controllers[i];
+		for (var i = 0, l = c.length; i < l; ++i) {
+			var controller = c[i];
 
 			// skip controllers without defined routes
 			if ( ! controller._routes) continue;
@@ -101,9 +137,9 @@
 					matches.shift();
 
 					return {
-						i: i, // controller id
-						name: name, // action name
-						matches: matches // matched parts of url
+						'i': i, // controller id
+						'name': name, // action name
+						'matches': matches // matched parts of url
 					};
 				}
 			}
