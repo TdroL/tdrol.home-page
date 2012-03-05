@@ -1,10 +1,10 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
 
-class View_Admin_Quote_Index extends View_Admin_Quote {
+class View_Admin_Quotes_Index extends View_Admin_Quotes {
 
 	public $_params = array();
 
-	public function items()
+	public function quotes()
 	{
 		$items = Jelly::query('quote')->get_all($this->_params);
 
@@ -13,13 +13,13 @@ class View_Admin_Quote_Index extends View_Admin_Quote {
 			$item['body'] = strip_tags($item['body']);
 			$item['urls'] = array(
 				'update' => Route::url('admin', array(
-					'controller' => 'quote',
+					'controller' => 'quotes',
 					'action'     => 'update',
 					'id'         => $item['id']
 				)),
-				'delete' => Route::url('admin', array(
-					'controller' => 'quote',
-					'action'     => 'delete',
+				'destroy' => Route::url('admin', array(
+					'controller' => 'quotes',
+					'action'     => 'destroy',
 					'id'         => $item['id']
 				))
 			);
@@ -32,15 +32,18 @@ class View_Admin_Quote_Index extends View_Admin_Quote {
 	{
 		return parent::url() + array(
 			'create' => Route::url('admin', array(
-				'controller' => 'quote',
+				'controller' => 'quotes',
 				'action' => 'create'
 			))
 		);
 	}
 
-	public function as_json()
+	public function as_json(array $data = array())
 	{
-		$items = $this->items();
-		return array('items' => $items) + parent::as_json();
+		$quotes = $this->quotes();
+
+		return parent::as_json(array(
+			'quotes' => $quotes
+		) + $data);
 	}
 }

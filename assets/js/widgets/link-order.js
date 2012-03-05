@@ -1,4 +1,4 @@
-window.jQuery && jQuery(function ($) {
+(function ($) {
 	"use strict";
 
 	var $name, $parent, $order, $sortable, $movable;
@@ -23,7 +23,7 @@ window.jQuery && jQuery(function ($) {
 	var view = {
 		links: [],
 		currentId: 0,
-		init: function () {
+		run: function () {
 			$name = $('#form-link-name');
 			$order = $('#form-link-order');
 			$parent = $('#form-link-link');
@@ -110,5 +110,5 @@ window.jQuery && jQuery(function ($) {
 	};
 
 	$.widget = $.widget || {};
-	($.widget.linkOrder = view.init)();
-});
+	$.widget.linkOrder = view.run;
+})(jQuery);

@@ -1,4 +1,4 @@
-window.jQuery && jQuery(function ($) {
+(function ($) {
 	"use strict";
 
 	var $table;
@@ -6,7 +6,9 @@ window.jQuery && jQuery(function ($) {
 	var listener = {
 		highlightRow: function (e) {
 			$(this.hash).addClass('target');
-			e && e.preventDefault();
+
+			e.preventDefault();
+			console.log(e, e.isDefaultPrevented());
 		},
 		resetRow: function () {
 			$table.find('.target').removeClass('target');
@@ -14,8 +16,8 @@ window.jQuery && jQuery(function ($) {
 	};
 
 	var view = {
-		init: function () {
-			$table = $('table.table');
+		run: function ($context) {
+			$table = $('table.table', $context || null);
 
 			if ( ! $table.length) {
 				return;
@@ -32,5 +34,5 @@ window.jQuery && jQuery(function ($) {
 	};
 
 	$.widget = $.widget || {};
-	($.widget.tableHashJump = view.init)();
-});
+	$.widget.tableHashJump = view.run;
+})(jQuery);

@@ -1,9 +1,9 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
 
-class View_Admin_Link_Create extends View_Admin_Link {
+class View_Admin_Links_Create extends View_Admin_Links {
 
 	protected $_partials = array(
-		'form' => 'admin/link/_form'
+		'form' => 'admin/links/_form'
 	);
 
 	public function form()
@@ -11,7 +11,7 @@ class View_Admin_Link_Create extends View_Admin_Link {
 		$fomg = new Fomg($this->model);
 
 		$url_cancel = Route::url('admin', array(
-			'controller' => 'link'
+			'controller' => 'links'
 		));
 
 		$fields = array('target', 'name', 'title', 'link', 'order', 'desc', 'tools');
@@ -35,9 +35,12 @@ class View_Admin_Link_Create extends View_Admin_Link {
 		return $fomg;
 	}
 
-	public function as_json()
+	public function as_json(array $data = array())
 	{
 		$form = $this->form()->as_array();
-		return array('form' => $form) + parent::as_json();
+
+		return parent::as_json(array(
+			'form' => $form
+		) + $data);
 	}
 }

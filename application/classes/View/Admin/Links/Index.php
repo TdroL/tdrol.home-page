@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
 
-class View_Admin_Link_Index extends View_Admin_Link {
+class View_Admin_Links_Index extends View_Admin_Links {
 
 	public $_params = array(
 		'order' => array(
@@ -9,7 +9,7 @@ class View_Admin_Link_Index extends View_Admin_Link {
 		)
 	);
 
-	public function items()
+	public function links()
 	{
 		$items = Jelly::query('link')->get_all($this->_params);
 
@@ -19,13 +19,13 @@ class View_Admin_Link_Index extends View_Admin_Link {
 
 			$item['url'] = array(
 				'update' => Route::url('admin', array(
-					'controller' => 'link',
+					'controller' => 'links',
 					'action'     => 'update',
 					'id'         => $item['id']
 				)),
-				'delete' => Route::url('admin', array(
-					'controller' => 'link',
-					'action'     => 'delete',
+				'destroy' => Route::url('admin', array(
+					'controller' => 'links',
+					'action'     => 'destroy',
 					'id'         => $item['id']
 				))
 			);
@@ -38,15 +38,18 @@ class View_Admin_Link_Index extends View_Admin_Link {
 	{
 		return parent::url() + array(
 			'create' => Route::url('admin', array(
-				'controller' => 'link',
+				'controller' => 'links',
 				'action' => 'create'
 			))
 		);
 	}
 
-	public function as_json()
+	public function as_json(array $data = array())
 	{
-		$items = $this->items();
-		return array('items' => $items) + parent::as_json();
+		$links = $this->links();
+
+		return parent::as_json(array(
+			'links' => $links
+		) + $data);
 	}
 }

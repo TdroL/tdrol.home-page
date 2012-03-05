@@ -10,7 +10,7 @@ class View_Layout extends Kostache_Layout {
 			// js
 			->set('head.js.modernizr', 'modernizr-2.5.3.min.js')
 			->set('body.js.plugins', 'plugins.js')
-
+			// jQuery
 			->set('jquery-cdn', '//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
 			->set('jquery', 'jquery-1.7.1.min.js');
 	}
@@ -29,7 +29,6 @@ class View_Layout extends Kostache_Layout {
 			'lang' => I18n::lang(),
 			'title' => '{tdroL}',
 			'description' => 'tdroL (/te-drol/): a web developer with too much spare time.',
-			'author' => 'tdroL',
 			'noindex' => FALSE,
 			'canonical' => NULL
 		);
@@ -140,12 +139,12 @@ class View_Layout extends Kostache_Layout {
 		);
 	}
 
-
 	/* Non-HTML renderers */
 	public function as_json()
 	{
 		return array(
-			'error' => __(Kohana::message('common', 'error.not_implemented'))
+			'status' => 'error',
+			'message' => __(Kohana::message('common', 'error.not_implemented'))
 		);
 	}
 

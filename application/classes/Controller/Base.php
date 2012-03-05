@@ -153,6 +153,9 @@ class Controller_Base extends Controller {
 				// is it an initial request (HMVC)
 				$this->request->is_initial() OR
 				$this->request->headers('X-Force-Layout'));
+
+			// attach flash message
+			$this->view->flash($this->session->get_once('flash'));
 		}
 
 		return parent::before();
@@ -207,10 +210,42 @@ class Controller_Base extends Controller {
 	// Helper method: checks if send post data is valid
 	protected function valid_post()
 	{
-		if ($this->request->method() != HTTP_Request::POST)
+		if ($this->request->method() == HTTP_Request::GET)
 			return FALSE;
 
 		return Security::check($this->request->post('csfr'));
+	}
+
+	public function status(array $data = array())
+	{
+		// if any data in flash, set it in view
+		$this->view->status(Arr::extract($data, array('type', 'message')));
+
+		if ($this->request->is_initial())
+		{
+			if (Arr::get($data, 'type') != 'success')
+			{
+				$this->session->set('flash', Arr::extract($data, array('type', 'message')));
+			}
+
+			$redirect_to = Arr::get($data, 'redirect_to');
+
+			if ($redirect_to !== NULL)
+			{
+				//HTTP::redirect(302, $redirect_to);
+			}
+
+		}
+
+		if ($code = Arr::get($data, 'code'))
+		{
+			$this->response->status($code);
+		}
+
+		if ($errors = Arr::get($data, 'errors'))
+		{
+			$this->view->errors($errors);
+		}
 	}
 
 	public function request_login()
@@ -245,6 +280,7 @@ class Controller_Base extends Controller {
 	{
 		// override current action
 		$this->request->action('dummy');
+
 		// set body
 		$this->response->body($body);
 	}
@@ -253,6 +289,7 @@ class Controller_Base extends Controller {
 	public function action_dummy() {}
 
 	// Helper method: HTTP exceptions handler
+	/*
 	public static function exception_handler(Exception $e)
 	{
 		switch (strtolower(get_class($e)))
@@ -260,6 +297,7 @@ class Controller_Base extends Controller {
 			case 'http_exception_404':
 				$response = new Response;
 				$response->status(404);
+
 				$view = new View_Home_404;
 				echo $response->body($view)->send_headers()->body();
 				return TRUE;
@@ -267,5 +305,5 @@ class Controller_Base extends Controller {
 				return Kohana_Exception::handler($e);
 		}
 	}
-
+	*/
 }

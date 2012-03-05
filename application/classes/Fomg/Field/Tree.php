@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
 
-class Fomg_Field_Tree extends Fomg_Field {
+class Fomg_Field_Tree extends Fomg_Field_Belongsto {
 
 	public function render(array $attr = array())
 	{
@@ -30,7 +30,7 @@ class Fomg_Field_Tree extends Fomg_Field {
 		}
 
 		// load related model
-		$value = $this->model->__get($name)->id();
+		$value = $this->value()->id();
 
 		return Form::select($name, $options, $value, $attr);
 	}

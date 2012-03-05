@@ -31,10 +31,16 @@ class View_Admin extends View_Layout {
 			// admin widgets
 			->set('body.js.widget-link-order', 'widgets/link-order.js')
 			->set('body.js.widget-table-hash-jump', 'widgets/table-hash-jump.js')
+			->set('body.js.widget-nav', 'widgets/nav.js')
 			// admin modules
 			->set('body.js.module-app', 'modules/app.js')
-			->set('body.js.module-admin-link', 'modules/admin-link.js')
-			->set('body.js.module-admin-quote', 'modules/admin-quote.js')
+			->set('body.js.module-link-index', 'modules/link-index.js')
+			->set('body.js.module-link-form', 'modules/link-form.js')
+			->set('body.js.module-quote-index', 'modules/quote-index.js')
+			// ->set('body.js.module-link-create', 'modules/link-create.js')
+			// ->set('body.js.module-link-update', 'modules/link-update.js')
+			// ->set('body.js.module-quote-create', 'modules/quote-create.js')
+			// ->set('body.js.module-quote-update', 'modules/quote-update.js')
 			;
 	}
 
@@ -55,19 +61,25 @@ class View_Admin extends View_Layout {
 	}
 
 	protected $flash = NULL;
-	public function flash()
+	public function flash($flash = NULL)
 	{
-		if ($this->flash == NULL)
+		if ($flash !== NULL)
 		{
-			$this->flash = Session::instance()->get_once('flash', array());
-
-			if (isset($this->flash['message']))
-			{
-				$this->flash['message'] = rtrim($this->flash['message']).'.';
-			}
+			$this->flash = $flash;
 		}
 
 		return $this->flash;
+	}
+
+	public $status = NULL;
+	public function status($status = NULL)
+	{
+		if ($status !== NULL)
+		{
+			$this->status = $status;
+		}
+
+		return $this->status;
 	}
 
 	public function nav()
@@ -77,19 +89,19 @@ class View_Admin extends View_Layout {
 		return array(
 			array(
 				'url' => Route::url('admin', array(
-					'controller' => 'link'
+					'controller' => 'links'
 				)),
-				'id' => 'link',
+				'id' => 'links',
 				'name' => 'Links',
-				'is_current' => ('link' == $current)
+				'is_current' => ('links' == $current)
 			),
 			array(
 				'url' => Route::url('admin', array(
-					'controller' => 'quote'
+					'controller' => 'quotes'
 				)),
-				'id' => 'quote',
+				'id' => 'quotes',
 				'name' => 'Quotes',
-				'is_current' => ('quote' == $current)
+				'is_current' => ('quotes' == $current)
 			),
 		);
 	}
@@ -121,37 +133,37 @@ class View_Admin extends View_Layout {
 		return $head;
 	}
 
-	public function as_json()
+	public function as_json(array $data = array())
 	{
 		$result = array();
 
+		$result['type'] = 'success';
+		if (Arr::is_array($this->status))
+		{
+			$result['type'] = Arr::get($this->status, 'type');
+
+			if ($message = Arr::get($this->status, 'message'))
+			{
+				$result['message'] = $message;
+			}
+		}
+
 		if ( ! empty($this->error))
 		{
-			$result['error'] = $this->error;
+			$result['errors'] = $this->error;
 		}
 
-		$flash = $this->flash();
-
-		if ( ! empty($flash))
+		if ($result['type'] == 'success')
 		{
-			$result['flash'] = $this->flash();
+			$result['data'] = $data;
+			$result['data']['url'] = $this->url();
+			$result['data']['title'] = Arr::get($this->head(), 'title');
+
 		}
-
-		$result['url'] = $this->url();
-
-		$head = $this->head();
-		$result['title'] = Arr::get($head, 'title');
 
 		// additionals
 		$request = Request::current();
 		$additional = explode(',', $request->query('additional'));
-
-		if (in_array('assets', $additional))
-		{
-			$result['additional'] = isset($result['additional']) ? $result['additional'] : array();
-
-			$result['additional']['assets'] = $this->assets()->as_array(TRUE);
-		}
 
 		if (in_array('template', $additional))
 		{

@@ -179,10 +179,12 @@ if ( ! Route::cache())
 			'action'     => 'notallowed',
 		));
 
-	Route::set('admin', 'admin(/<controller>(/<action>(/<id>)))')
+	Route::set('admin', 'admin(/<controller>(/<id>)(/<action>))', array(
+			'id' => '\d+'
+		))
 		->defaults(array(
 			'directory' => 'admin',
-			'controller' => 'link',
+			'controller' => 'links',
 			'action'     => 'index',
 		));
 

@@ -11,6 +11,6 @@ class Fomg_Field_Order extends Fomg_Field {
 		$attr['type'] = 'number';
 		$attr['data-links'] = json_encode($tree);
 
-		return Form::input($name, (int) $this->model->__get($name), $attr);
+		return Form::input($name, (int) $this->value(), $attr);
 	}
 }

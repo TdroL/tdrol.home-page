@@ -1,0 +1,56 @@
+<h2>Quote <small>delete</small></h2>
+
+{{#form}}
+{{&open}}
+	<fieldset>
+		{{#has_errors}}
+		<div class="alert alert-error fade in">
+			<a class="close" data-dismiss="alert" href="#">&times;</a>
+			Found errors in form.
+		</div>
+		{{/has_errors}}
+
+		<input type="hidden" name="id" value="{{field.id}}" />
+
+		{{#fields}}
+		<div class="control-group">
+			<span class="control-label">{{&label}}</span>
+			<div class="controls">
+				{{#input}}{{&input}}{{/input}}
+				{{^input}}<em>(empty)</em>{{/input}}
+			</div>
+		</div>
+		{{/fields}}
+
+		<div class="form-actions">
+			<button class="btn btn-danger">Delete</button>
+			<a href="{{url.cancel}}" class="btn">Cancel</a>
+		</div>
+
+	</fieldset>
+{{&close}}
+{{/form}}
+
+<!--
+{{&form.open}}
+	{{#has_errors}}
+	<div class="alert alert-error">
+		<a class="close" data-dismiss="alert" href="#">&times;</a>
+		Found errors in form.
+	</div>
+	{{/has_errors}}
+
+	<div class="control-group">
+		<span class="control-label">{{label.body}}</span>
+		<div class="controls">
+			{{value.body}}
+			{{^value.body}}<em>Empty</em>{{/value.body}}
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button class="btn btn-danger">Remove</button>
+		<a href="{{form.url.cancel}}" class="btn">Cancel</a>
+	</div>
+{{&form.close}}
+-->

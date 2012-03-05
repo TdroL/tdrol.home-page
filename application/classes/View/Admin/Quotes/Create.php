@@ -1,9 +1,9 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
 
-class View_Admin_Quote_Create extends View_Admin_Quote {
+class View_Admin_Quotes_Create extends View_Admin_Quotes {
 
 	protected $_partials = array(
-		'form' => 'admin/quote/_form'
+		'form' => 'admin/quotes/_form'
 	);
 
 	public function form()
@@ -11,7 +11,7 @@ class View_Admin_Quote_Create extends View_Admin_Quote {
 		$fomg = new Fomg($this->model);
 
 		$url_cancel = Route::url('admin', array(
-			'controller' => 'quote'
+			'controller' => 'quotes'
 		));
 
 		$fields = array('body');
@@ -30,9 +30,12 @@ class View_Admin_Quote_Create extends View_Admin_Quote {
 		return $fomg;
 	}
 
-	public function as_json()
+	public function as_json(array $data = array())
 	{
 		$form = $this->form()->as_array();
-		return array('form' => $form) + parent::as_json();
+
+		return parent::as_json(array(
+			'form' => $form
+		) + $data);
 	}
 }

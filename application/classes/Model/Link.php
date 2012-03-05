@@ -53,9 +53,9 @@ class Model_Link extends Jelly_Model {
 	public function fields()
 	{
 		return array(
-			'url'   => 'url',
-			'link'  => 'tree',
-			'order' => 'order',
+			'target' => 'url',
+			'link'   => 'tree',
+			'order'  => 'order',
 		);
 	}
 
