@@ -8,7 +8,9 @@
 	    active = [], // active controllers
 	    req = null, // ajax handler
 	    templates = {}, // templates container
-	    history = window.History;
+	    history = window.History,
+	    ignoreStateChange = false, // double lock system for
+	    suppressPushState = false; // History.js' statechange
 
 	a.controllers = c;
 	a.register = function (controller) {
@@ -27,15 +29,15 @@
 			controller.init();
 		}
 
-		// if controller has get method, try to match url
-		if (controller.get) {
+		// if controller has ready method, try to match url
+		if (controller.ready) {
 			// find matches for current (not necessary initial)
 			// address
 			matches = a.parseRoutes(href, controller.routes || []);
 
-			// if any matches, run (late) get method
+			// if any matches, run (late) ready method
 			if (matches) {
-				controller.get(href, matches);
+				controller.ready(href, matches);
 			}
 		}
 	}
@@ -156,7 +158,7 @@
 			// match route in proper way (context?)
 			switch ($.type(route)) {
 			case 'string':
-				// convert string to regexp
+				// convert string to regexp:
 				// (...) -> (?:...)?
 				// {...} -> (...)
 				// : -> [^\/]+
@@ -164,15 +166,15 @@
 				// * -> .*
 				// {:} -> ([^\/]+)
 				// (/{*}) -> (?:\/(.*))?
-				route = route.replace(/\(/g, '(?:')
-					.replace(/\)/g, ')?')
-					.replace(/\//g, '\\/')
-					.replace(/\{/g, '(')
-					.replace(/\}/g, ')')
+				route = route.replace(/\//g, '\\/')
 					.replace(/\+/g, '.+')
 					.replace(/\*/g, '.*')
-					.replace(/[^\?]:/g, '[^\/]+')
-					+ '(?:(?:\\?|#).*)?$'; // + '(?:\\?.*)?(?:\\#.*)?$';
+					.replace(/:/g, '[^\/]+')
+					.replace(/\(/g, '(?:')
+					.replace(/\)/g, ')?')
+					.replace(/\{/g, '(')
+					.replace(/\}/g, ')')
+					+ '(?:(?:\\?|#).*)?$';
 
 				matches = url.match(new RegExp(route, 'i'));
 			break;
@@ -220,8 +222,17 @@
 			// get requested state
 			var state = a.getState(), list;
 
+			// ignore call triggered by pushState
+			if (ignoreStateChange) {
+				ignoreStateChange = false;
+				return;
+			}
+
 			// find matching controllers
 			list = a.matchRoutes(state.url);
+
+			// suppress calling pushState in ajax request
+			suppressPushState = true;
 
 			// execute get methods for matched controllers
 			if (a.execute(state.url, list, 'get')) {
@@ -231,11 +242,7 @@
 	};
 
 	/* ajax loader */
-	a.loadData = function (url, $content) {
-		if ($content !== undefined) {
-			return $.when($content, {});
-		}
-
+	a.loadData = function (url) {
 		// find controller and action for target url
 		var data = {},
 		    returnDeferred = $.Deferred();
@@ -264,12 +271,25 @@
 			// render recived content
 			$content = $(Mustache.render(templates[url].template || '', response.data || {}, templates[url].partials || {}));
 
-			// a.pushState(null, response.title || '', url);
+			// ignore pushState if called from statechange handler
+			if (suppressPushState) {
+				// unlock pushState for next calls
+				suppressPushState = false;
+			} else {
+				// ignore statechange event - avoid infinite  loop of calls:
+				// [statechange -> ajax -> statechange -> ...]
+				ignoreStateChange = true;
+
+				// push new state to browser history
+				a.pushState(null, response.data.title || '', url);
+			}
 
 			returnDeferred.resolve($content, response, req);
 		}).fail(function ajaxFail(response) {
+			// something went wrong (ex. user aborted the request)
 			returnDeferred.reject(response);
 		}).always(function ajaxAlways() {
+			// unset req - suppress req#abort calls for finished request
 			req = null;
 		});
 

@@ -3,8 +3,8 @@ App.register({
 		'/admin/quotes(/index)'
 	//	/\/admin(?:\/quotes(?:\/index?)?)?(?:\?.*)?(?:\#.*)?$/i
 	],
-	get: function (url, matches, $content) {
-		App.loadData(url, $content)
+	get: function (url, matches) {
+		App.loadData(url)
 			.done(this.render);
 	},
 	render: function ($content, response) {

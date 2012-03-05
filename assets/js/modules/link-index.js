@@ -6,8 +6,8 @@ App.register({
 	ready: function () {
 		$.widget.tableHashJump();
 	},
-	get: function (url, matches, $content) {
-		App.loadData(url, $content)
+	get: function (url, matches) {
+		App.loadData(url)
 			.done(this.render);
 	},
 	render: function ($content, response) {
