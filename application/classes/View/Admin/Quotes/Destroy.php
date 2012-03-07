@@ -2,29 +2,12 @@
 
 class View_Admin_Quotes_Destroy extends View_Admin_Quotes {
 
-	/*
-	public function label()
-	{
-		$fields = $this->model->meta()->fields();
-		foreach ($fields as & $field)
-		{
-			$field = $field->name;
-		}
-		return $fields;
-	}
-
-	public function quote()
-	{
-		return $this->model->as_array();
-	}
-	*/
-
 	public function form()
 	{
 		$fomg = new Fomg($this->model);
 
 		$url_cancel = Route::url('admin', array(
-			'controller' => 'quote'
+			'controller' => 'quotes'
 		));
 
 		$fields = array('body');

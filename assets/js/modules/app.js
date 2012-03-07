@@ -18,6 +18,7 @@
 	};
 
 	a.$target = null;
+	a.baseUrl = window.baseUrl;
 
 	function registerAutoinit(controller) {
 		var href = window.location.href, matches;
@@ -73,7 +74,7 @@
 		}
 	};
 
-	a.execute = function (url, list, type) {
+	a.execute = function (url, list, type, data) {
 		var i, l, controller, matches, el, result,
 		    status = false, called = [];
 
@@ -100,14 +101,14 @@
 			el = list[i];
 			controller = c[el.i];
 
-			if ($.isFunction(controller[type] || null)) {
+			if ($.isFunction (controller[type] || null)) {
 
 				// add to active controllers if not added already
 				if (active.indexOf(controller) < 0) {
 					active.push(controller);
 				}
 
-				result = controller[type](url, el.matches);
+				result = controller[type](url, el.matches, data || {});
 
 				// if executed method returned anything other than undefined, stop executing other controllers
 				if (result !== undefined) {
@@ -119,6 +120,24 @@
 		}
 
 		return status;
+	};
+
+	a.executeLink = function (url, type, data) {
+		if (url === undefined) {
+			console.error('App#executeLink: url is undefined');
+			debugger;
+		}
+
+		if ( ! /^(https?:)\/\//i.test(url)) {
+			// add tailing slash to baseUrl and remove heading slash from url
+			url = a.baseUrl.replace(/\/?$/, '/') + url.replace(/^\//, '')
+		}
+
+		// find matching controllers
+		var list = a.matchRoutes(url);
+
+		// execute proper (type) methods for matched controllers
+		return a.execute(url, list, type || 'get', data);
 	};
 
 	a.matchRoutes = function (url) {
@@ -201,19 +220,13 @@
 				return;
 			}
 
-			// find matching controllers
-			var list = a.matchRoutes(this.href);
-
-			// execute get methods for matched controllers
-			if (a.execute(this.href, list, 'get')) {
+			// execute get methods
+			if (a.executeLink(this.href, 'get')) {
 				e.preventDefault();
 			}
 		}).on('submit.app', 'form', function formsSubmitHandler(e) {
-			// find matching controllers
-			var list = a.matchRoutes(this.href);
-
-			// execute post methods for matched controllers
-			if (a.execute(this.href, list, 'post')) {
+			// execute post methods
+			if (a.executeLink(this.action, 'post')) {
 				e.preventDefault();
 			}
 		});
@@ -222,34 +235,33 @@
 			// get requested state
 			var state = a.getState(), list;
 
-			// ignore call triggered by pushState
+			// if triggered by pushState: ignore event
 			if (ignoreStateChange) {
 				ignoreStateChange = false;
 				return;
 			}
-
-			// find matching controllers
-			list = a.matchRoutes(state.url);
+			// else: handle stateChange triggered by browser interactions
 
 			// suppress calling pushState in ajax request
 			suppressPushState = true;
 
-			// execute get methods for matched controllers
-			if (a.execute(state.url, list, 'get')) {
+			// execute get methods
+			if (a.executeLink(state.url, 'get')) {
 				e.preventDefault(); // return false?
 			}
 		});
 	};
 
 	/* ajax loader */
-	a.loadData = function (url) {
-		// find controller and action for target url
-		var data = {},
+	a.loadData = function (url, responseData) {
+		var ajaxData = {}, $content,
 		    returnDeferred = $.Deferred();
+
+		responseData = responseData || {};
 
 		// find if template is loaded
 		if ( ! templates[url]) {
-			data = { additional: 'template' };
+			ajaxData = { additional: 'template' };
 		}
 
 		// abort current/previous request
@@ -261,15 +273,13 @@
 			url: url,
 			type: 'get',
 			dataType: 'json',
-			data: data
+			data: ajaxData
 		}).done(function ajaxDone(response) {
-			var $content;
-
 			// load template if requested
 			a.attachTemplate(url, response);
 
 			// render recived content
-			$content = $(Mustache.render(templates[url].template || '', response.data || {}, templates[url].partials || {}));
+			$content = $(Mustache.render(templates[url].template || '', $.extend(responseData, response.data) || {}, templates[url].partials || {}));
 
 			// ignore pushState if called from statechange handler
 			if (suppressPushState) {
@@ -296,6 +306,33 @@
 		return returnDeferred;
 	};
 
+	/* ajax uploader */
+	a.saveData = function (url, postData) {
+		var returnDeferred = $.Deferred();
+
+		// abort current/previous request
+		if (req) {
+			req.abort();
+		}
+
+		req = $.ajax({
+			url: url,
+			type: 'post',
+			dataType: 'json',
+			data: postData
+		}).done(function ajaxDone(response) {
+			returnDeferred.resolve(response, req);
+		}).fail(function ajaxFail(response) {
+			// something went wrong (ex. user aborted the request)
+			returnDeferred.reject(response);
+		}).always(function ajaxAlways() {
+			// unset req - suppress req#abort calls for finished request
+			req = null;
+		});
+
+		return returnDeferred;
+	};
+
 	a.attachTemplate = function (url, response) {
 		var additional;
 
@@ -311,13 +348,19 @@
 		}
 	};
 
-	/* pinger */
+	// content replacer
+	a.replaceContent = function(newContent) {
+		$window.scrollTop(0);
+		return a.$target.empty().append(newContent);
+	};
 
+	/* pinger */
 	a.ping = {};
+	a.ping.url = window.pingUrl;
 	a.ping.timer = null;
 	a.ping.interval = 5 * 60 * 1000; // 5 min'
 	a.ping.callback = function () {
-		$.get(window.pingUrl || window.location.href);
+		$.get(this.url || window.location.href);
 	};
 	a.ping.run = function () {
 		if (this.timer) {

@@ -2,6 +2,20 @@
 
 class View_Layout extends Kostache_Layout {
 
+	public $model;
+	public $collection;
+
+	protected $params = array();
+	public function params(array $params = NULL)
+	{
+		if ($params === NULL)
+		{
+			$this->params = Arr::overwrite($this->params, $params);
+		}
+
+		return $this->params;
+	}
+
 	public function assets()
 	{
 		return Yassets::factory()
@@ -21,6 +35,44 @@ class View_Layout extends Kostache_Layout {
 			'production'  => Kohana::$environment == Kohana::PRODUCTION,
 			'development' => Kohana::$environment == Kohana::DEVELOPMENT,
 		);
+	}
+
+	public $error = array();
+	public function errors($errors = NULL)
+	{
+		if (is_null($errors))
+		{
+			return array_values($this->error);
+		}
+
+		$this->error = $errors;
+	}
+
+	public function has_errors()
+	{
+		return ! empty($this->error);
+	}
+
+	protected $flash = NULL;
+	public function flash($flash = NULL)
+	{
+		if ($flash !== NULL)
+		{
+			$this->flash = $flash;
+		}
+
+		return $this->flash;
+	}
+
+	public $status = NULL;
+	public function status($status = NULL)
+	{
+		if ($status !== NULL)
+		{
+			$this->status = $status;
+		}
+
+		return $this->status;
 	}
 
 	public function head()

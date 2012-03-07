@@ -1,14 +1,11 @@
 App.register({
 	routes: [
-		'/admin/links/{create}',
-		'/admin/links/*/{update}',
-		'/admin/links/*/{destroy}'
+		'/admin/quotes/{create}',
+		'/admin/quotes/*/{update}',
+		'/admin/quotes/*/{destroy}'
 	],
-	ready: function () {
-		$.widget.linkOrder();
-	},
 	post: function(url, matches) {
-		var postData = $('#form-link').serialize();
+		var postData = $('#form-quote').serialize();
 
 		App.saveData(url, postData).done(this.saveHandler);
 	},
@@ -18,7 +15,8 @@ App.register({
 	},
 	saveHandler: function(response, req) {
 		if (response.type == 'success') {
-			App.executeLink('/admin/links', 'get', {
+			console.log('success');
+			App.executeLink('/admin/quotes', 'get', {
 				flash: {
 					type: 'success',
 					message: response.message
@@ -31,7 +29,6 @@ App.register({
 	render: function ($content, response) {
 		App.replaceContent($content);
 
-		$.widget.nav('links');
-		$.widget.linkOrder();
+		$.widget.nav('quotes');
 	}
 });

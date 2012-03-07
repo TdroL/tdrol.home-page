@@ -2,11 +2,9 @@
 
 class View_Admin_Quotes_Index extends View_Admin_Quotes {
 
-	public $_params = array();
-
 	public function quotes()
 	{
-		$items = Jelly::query('quote')->get_all($this->_params);
+		$items = $this->collection->get_all($this->params);
 
 		foreach ($items as & $item)
 		{

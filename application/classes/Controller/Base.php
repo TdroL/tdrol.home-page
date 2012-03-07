@@ -230,9 +230,9 @@ class Controller_Base extends Controller {
 
 			$redirect_to = Arr::get($data, 'redirect_to');
 
-			if ($redirect_to !== NULL)
+			if ( ! $this->request->is_ajax() AND $redirect_to !== NULL)
 			{
-				//HTTP::redirect(302, $redirect_to);
+				HTTP::redirect(302, $redirect_to);
 			}
 
 		}

@@ -4,8 +4,6 @@ class View_Admin extends View_Layout {
 
 	protected $_layout = 'admin';
 
-	public $model;
-
 	public $render_header = TRUE;
 
 	public function assets()
@@ -37,49 +35,8 @@ class View_Admin extends View_Layout {
 			->set('body.js.module-link-index', 'modules/link-index.js')
 			->set('body.js.module-link-form', 'modules/link-form.js')
 			->set('body.js.module-quote-index', 'modules/quote-index.js')
-			// ->set('body.js.module-link-create', 'modules/link-create.js')
-			// ->set('body.js.module-link-update', 'modules/link-update.js')
-			// ->set('body.js.module-quote-create', 'modules/quote-create.js')
-			// ->set('body.js.module-quote-update', 'modules/quote-update.js')
+			->set('body.js.module-quote-form', 'modules/quote-form.js')
 			;
-	}
-
-	public $error = array();
-	public function errors($errors = NULL)
-	{
-		if (is_null($errors))
-		{
-			return array_values($this->error);
-		}
-
-		$this->error = $errors;
-	}
-
-	public function has_errors()
-	{
-		return ! empty($this->error);
-	}
-
-	protected $flash = NULL;
-	public function flash($flash = NULL)
-	{
-		if ($flash !== NULL)
-		{
-			$this->flash = $flash;
-		}
-
-		return $this->flash;
-	}
-
-	public $status = NULL;
-	public function status($status = NULL)
-	{
-		if ($status !== NULL)
-		{
-			$this->status = $status;
-		}
-
-		return $this->status;
 	}
 
 	public function nav()

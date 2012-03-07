@@ -3,6 +3,9 @@
 class Controller_Admin_Quotes extends Controller_Admin {
 
 	public function action_index() {
+		$this->view->collection = Model::collection('quote');
+		$this->view->params($this->request->query());
+
 		$this->status(array(
 			'type' => 'success',
 		));
@@ -13,8 +16,8 @@ class Controller_Admin_Quotes extends Controller_Admin {
 		$this->view->model = new Model_Quote;
 		$model = $this->view->model;
 
-		$location = Route::get('admins')->uri(array(
-			'controller' => 'quote'
+		$location = Route::get('admin')->uri(array(
+			'controller' => 'quotes'
 		));
 
 		if ($this->valid_post())

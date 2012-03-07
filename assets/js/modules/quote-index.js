@@ -3,12 +3,12 @@ App.register({
 		'/admin/quotes(/index)'
 	//	/\/admin(?:\/quotes(?:\/index?)?)?(?:\?.*)?(?:\#.*)?$/i
 	],
-	get: function (url, matches) {
-		App.loadData(url)
+	get: function (url, matches, data) {
+		App.loadData(url, data)
 			.done(this.render);
 	},
 	render: function ($content, response) {
-		App.$target.html($content);
+		App.replaceContent($content);
 
 		$.widget.nav('quotes');
 	}

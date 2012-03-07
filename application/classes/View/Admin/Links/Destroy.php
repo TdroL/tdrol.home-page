@@ -7,7 +7,7 @@ class View_Admin_Links_Destroy extends View_Admin_Links {
 		$fomg = new Fomg($this->model);
 
 		$url_cancel = Route::url('admin', array(
-			'controller' => 'link'
+			'controller' => 'links'
 		));
 
 		$fields = array('target', 'name', 'title', 'link', 'order', 'desc', 'tools');

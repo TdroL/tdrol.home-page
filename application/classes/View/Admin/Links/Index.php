@@ -2,7 +2,7 @@
 
 class View_Admin_Links_Index extends View_Admin_Links {
 
-	public $_params = array(
+	protected $params = array(
 		'order' => array(
 			'link' => 'asc',
 			'order' => 'asc'
@@ -11,7 +11,7 @@ class View_Admin_Links_Index extends View_Admin_Links {
 
 	public function links()
 	{
-		$items = Jelly::query('link')->get_all($this->_params);
+		$items = $this->collection->get_all($this->params);
 
 		foreach ($items as & $item)
 		{
