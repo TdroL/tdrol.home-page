@@ -1,27 +1,30 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class View_Home_Index extends View_Layout {
-
-	public $model;
+class View_Home_Index extends View_Home {
 
 	protected $_partials = array(
 		'list' => 'home/list'
 	);
 
+	public $links;
+	protected $_links_tree;
+
 	public function render()
 	{
-		$links = Jelly::query('link')->get_tree();
-
-		$this->links = $this->_prepare_links($links);
+		$links = $this->links->get_tree();
+		$this->_links_tree = $this->_prepare_links($links);
 
 		return parent::render();
 	}
 
-	public $links = array();
+	public function links()
+	{
+		return $this->_links_tree;
+	}
 
 	public function has_links()
 	{
-		return ! empty($this->links);
+		return ! empty($this->_links_tree);
 	}
 
 	protected function _prepare_links($links)

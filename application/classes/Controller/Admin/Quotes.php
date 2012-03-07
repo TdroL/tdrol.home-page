@@ -3,7 +3,7 @@
 class Controller_Admin_Quotes extends Controller_Admin {
 
 	public function action_index() {
-		$this->view->collection = Model::collection('quote');
+		$this->view->quotes = Model::collection('quote');
 		$this->view->params($this->request->query());
 
 		$this->status(array(

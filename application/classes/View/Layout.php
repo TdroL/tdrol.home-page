@@ -3,7 +3,6 @@
 class View_Layout extends Kostache_Layout {
 
 	public $model;
-	public $collection;
 
 	protected $params = array();
 	public function params(array $params = NULL)
@@ -160,20 +159,6 @@ class View_Layout extends Kostache_Layout {
 		$src = $images[$wide == true];
 
 		return '<a href="'.$href.'" title="'.$alt.'"><img src="'.$src.'" alt="'.$alt.'"/></a>';
-	}
-
-	public function quote()
-	{
-		$quotes = Kohana::$config->load('quotes')->as_array();
-
-		if (empty($quotes))
-		{
-			return NULL;
-		}
-
-		$i = round(time() / (60*60*24)) % (count($quotes) - 1);
-
-		return trim($quotes[$i]);
 	}
 
 	public function security()

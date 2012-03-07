@@ -9,9 +9,11 @@ class View_Admin_Links_Index extends View_Admin_Links {
 		)
 	);
 
+	public $links;
+
 	public function links()
 	{
-		$items = $this->collection->get_all($this->params);
+		$items = $this->links->get_all($this->params);
 
 		foreach ($items as & $item)
 		{

@@ -2,9 +2,11 @@
 
 class View_Admin_Quotes_Index extends View_Admin_Quotes {
 
+	public $quotes;
+
 	public function quotes()
 	{
-		$items = $this->collection->get_all($this->params);
+		$items = $this->quotes->get_all($this->params);
 
 		foreach ($items as & $item)
 		{

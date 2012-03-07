@@ -3,7 +3,7 @@
 class Controller_Admin_Links extends Controller_Admin {
 
 	public function action_index() {
-		$this->view->collection = Model::collection('link');
+		$this->view->links = Model::collection('link');
 		$this->view->params($this->request->query());
 
 		$this->status(array(
