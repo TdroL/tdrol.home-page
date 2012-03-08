@@ -16,13 +16,10 @@ body > div[role=main] {
 #left, #right {
   float: left;
   width: 50%;
-}
 
-#left h1,
-#left p,
-#right h1,
-#right p {
-  margin: 10px;
+  h1, p {
+    margin: 10px;
+  }
 }
 
 @import "h5bp-tail";

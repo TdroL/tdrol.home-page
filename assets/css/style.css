@@ -406,7 +406,7 @@ body > div[role=main] {
   background-position: left top;
   *zoom: 1;
 }
-/* line 38, C:/Users/tdrol/bin/Git/lib/ruby/gems/1.9.1/gems/compass-0.11.5/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 38, C:/Users/tdrol/bin/Git/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
 body > div[role=main]:after {
   content: "";
   display: table;
@@ -418,12 +418,8 @@ body > div[role=main]:after {
   float: left;
   width: 50%;
 }
-
-/* line 24, ../scss/style.scss */
-#left h1,
-#left p,
-#right h1,
-#right p {
+/* line 20, ../scss/style.scss */
+#left h1, #left p, #right h1, #right p {
   margin: 10px;
 }
 
