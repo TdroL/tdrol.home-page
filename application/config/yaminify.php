@@ -4,7 +4,7 @@ return array(
 	// Cache directory - must be writable and visible to world
 	'cache_dir' => 'assets/cache',
 	'html' => array(
-		'minify' => ! TRUE,
+		'minify' => Kohana::$environment == Kohana::PRODUCTION,
 		'driver' => 'default',
 		'options' => array(
 			/**
@@ -20,7 +20,7 @@ return array(
 		)
 	),
 	'css' => array(
-		'minify' => TRUE,
+		'minify' => Kohana::$environment == Kohana::PRODUCTION,
 		'dir' => 'assets/css',
 		'cache' => TRUE,
 		'driver' => 'default',
@@ -51,7 +51,7 @@ return array(
 		)
 	),
 	'js' => array(
-		'minify' => ! TRUE,
+		'minify' => Kohana::$environment == Kohana::PRODUCTION,
 		'dir' => 'assets/js',
 		'cache' => TRUE,
 		'driver' => 'closure',
