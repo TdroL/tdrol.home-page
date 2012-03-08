@@ -6,6 +6,10 @@ class Model_Link extends Jelly_Model {
 	{
 		$meta->db('sqlite');
 
+		$meta->behaviors(array(
+			'order' => Jelly::behavior('Order'),
+		));
+
 		$meta->fields(array(
 			'id'      => Jelly::field('primary'),
 			'target'  => Jelly::field('string', array(
@@ -46,6 +50,7 @@ class Model_Link extends Jelly_Model {
 			)),
 			'links'   => Jelly::field('hasmany', array(
 				'label' => 'Child links',
+				'delete_dependent' => TRUE,
 			)),
 		));
 	}
@@ -66,33 +71,22 @@ class Model_Link extends Jelly_Model {
 			return parent::delete();
 		}
 
-		$parent = FALSE;
-
 		if ( ! $db)
 		{
 			$db = Database::instance($this->_meta->db());
 			$db->begin();
-			$parent = TRUE;
 		}
 
 		try
 		{
-			foreach ($this->links as $link)
+			if (parent::delete())
 			{
-				$link->delete();
+				$db->commit();
+				return TRUE;
 			}
 
-			if ($parent)
-			{
-				if (parent::delete())
-				{
-					$db->commit();
-					return TRUE;
-				}
-
-				$db->rollback();
-				return FALSE;
-			}
+			$db->rollback();
+			return FALSE;
 		}
 		catch (Exception $e)
 		{
@@ -103,98 +97,27 @@ class Model_Link extends Jelly_Model {
 
 	public function save($validation = NULL)
 	{
-		// if updating existing one
-		if ($this->_loaded)
+		$db = Database::instance($this->_meta->db());
+
+		try
 		{
-			if ($this->changed('link') OR $this->changed('order'))
+			$db->begin();
+
+			parent::save($validation);
+
+			if ($this->saved())
 			{
-				$db = Database::instance($this->_meta->db());
-				$db->begin();
-
-				$old_link = $this->original('link')->select();
-				$new_link = $this->link;
-
-				$old_order = $this->original('order');
-				$new_order = $this->order;
-
-				try
-				{
-					// old link
-					$query = Jelly::query('link')
-						->set(array('order' => DB::expr($db->quote_column('order').' - 1')));
-					if ($old_link->loaded())
-					{
-						$query->where('link', '=', $old_link->id);
-					}
-					else
-					{
-						$query->where('link', 'IS', DB::expr('NULL'));
-					}
-					$query->where('order', '>= ', $old_order)
-						->update();
-
-					// new link
-					$query = Jelly::query('link')
-						->set(array('order' => DB::expr($db->quote_column('order').' + 1')));
-					if ($new_link->loaded())
-					{
-						$query->where('link', '=', $new_link->id);
-					}
-					else
-					{
-						$query->where('link', 'IS', DB::expr('NULL'));
-					}
-					$query->where('order', '>= ', $new_order)
-						->update();
-
-					parent::save($validation);
-
-					$db->commit();
-				}
-				catch (Exception $e)
-				{
-					$db->rollback();
-					throw $e;
-				}
+				$db->commit();
 			}
 			else
 			{
-				parent::save($validation);
+				$db->rollback();
 			}
 		}
-		// if creating new
-		else
+		catch (Exception $e)
 		{
-			$db = Database::instance($this->_meta->db());
-			$db->begin();
-
-			try
-			{
-				$query = Jelly::query('link')
-					->set(array('order' => DB::expr($db->quote_column('order').' + 1')));
-
-				// if has parent link
-				if ($this->link->loaded())
-				{
-					$query->where('link', '=', $this->link->id);
-				}
-				else
-				{
-					$query->where('link', 'IS', DB::expr('NULL'));
-				}
-
-				$query->where('order', '>= ', $this->order)
-					->update();
-
-				parent::save($validation);
-
-				$db->commit();
-			}
-			catch (Exception $e)
-			{
-				$db->rollback();
-				throw $e;
-			}
+			$db->rollback();
+			throw $e;
 		}
 
 		return $this;

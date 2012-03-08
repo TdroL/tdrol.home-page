@@ -31,11 +31,11 @@ class View_Admin extends View_Layout {
 			->set('body.js.widget-table-hash-jump', 'widgets/table-hash-jump.js')
 			->set('body.js.widget-nav', 'widgets/nav.js')
 			// admin modules
-			->set('body.js.module-app', 'modules/app.js')
-			->set('body.js.module-link-index', 'modules/link-index.js')
-			->set('body.js.module-link-form', 'modules/link-form.js')
-			->set('body.js.module-quote-index', 'modules/quote-index.js')
-			->set('body.js.module-quote-form', 'modules/quote-form.js')
+			// ->set('body.js.module-app', 'modules/app.js')
+			// ->set('body.js.module-link-index', 'modules/link-index.js')
+			// ->set('body.js.module-link-form', 'modules/link-form.js')
+			// ->set('body.js.module-quote-index', 'modules/quote-index.js')
+			// ->set('body.js.module-quote-form', 'modules/quote-form.js')
 			;
 	}
 
