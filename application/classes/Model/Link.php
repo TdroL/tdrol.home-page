@@ -64,67 +64,7 @@ class Model_Link extends Jelly_Model {
 		);
 	}
 
-	public function delete($db = NULL)
-	{
-		if ( ! $this->_loaded)
-		{
-			return parent::delete();
-		}
-
-		if ( ! $db)
-		{
-			$db = Database::instance($this->_meta->db());
-			$db->begin();
-		}
-
-		try
-		{
-			if (parent::delete())
-			{
-				$db->commit();
-				return TRUE;
-			}
-
-			$db->rollback();
-			return FALSE;
-		}
-		catch (Exception $e)
-		{
-			$db->rollback();
-			throw $e;
-		}
-	}
-
-	public function save($validation = NULL)
-	{
-		$db = Database::instance($this->_meta->db());
-
-		try
-		{
-			$db->begin();
-
-			parent::save($validation);
-
-			if ($this->saved())
-			{
-				$db->commit();
-			}
-			else
-			{
-				$db->rollback();
-			}
-		}
-		catch (Exception $e)
-		{
-			$db->rollback();
-			throw $e;
-		}
-
-		return $this;
-	}
-
-	/**/
-
+	/* Validation helpers */
 	public static function is_related($value, $field, $model)
 	{
 		$field_meta = $model->meta()->field($field);

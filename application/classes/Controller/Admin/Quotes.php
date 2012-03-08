@@ -25,7 +25,10 @@ class Controller_Admin_Quotes extends Controller_Admin {
 			try
 			{
 				$model->set_safe($this->request->post());
-				$model->save();
+
+				$model->transaction(function () {
+					return $this->save();
+				});
 
 				$message = __(Kohana::message('common', 'resource.created'));
 
@@ -73,7 +76,10 @@ class Controller_Admin_Quotes extends Controller_Admin {
 			try
 			{
 				$model->set_safe($this->request->post());
-				$model->save();
+
+				$model->transaction(function () {
+					return $this->save();
+				});
 
 				$message = __(Kohana::message('common', 'resource.updated'));
 
@@ -120,7 +126,9 @@ class Controller_Admin_Quotes extends Controller_Admin {
 		{
 			try
 			{
-				$model->delete();
+				$model->transaction(function () {
+					return $this->delete();
+				});
 
 				$message = __(Kohana::message('common', 'resource.deleted'));
 

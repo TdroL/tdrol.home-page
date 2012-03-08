@@ -13,4 +13,31 @@ class Jelly_Model extends Jelly_Core_Model {
 
 		return $this->set($values);
 	}
+
+	public function transaction(Closure $closure)
+	{
+		$db = Database::instance($this->_meta->db());
+		$db->begin();
+
+		try
+		{
+			$closure = $closure->bindTo($this);
+
+			$result = $closure();
+
+			if ($result)
+			{
+				$db->commit();
+				return $result;
+			}
+
+			$db->rollback();
+			return $result;
+		}
+		catch (Exception $e)
+		{
+			$db->rollback();
+			throw $e;
+		}
+	}
 }
