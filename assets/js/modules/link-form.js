@@ -1,8 +1,8 @@
 App.register({
 	routes: [
 		'/admin/links/{create}',
-		'/admin/links/*/{update}',
-		'/admin/links/*/{destroy}'
+		'/admin/links/:/{update}',
+		'/admin/links/:/{destroy}'
 	],
 	ready: function () {
 		$.widget.linkOrder();

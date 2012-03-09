@@ -1,8 +1,8 @@
 App.register({
 	routes: [
 		'/admin/quotes/{create}',
-		'/admin/quotes/*/{update}',
-		'/admin/quotes/*/{destroy}'
+		'/admin/quotes/:/{update}',
+		'/admin/quotes/:/{destroy}'
 	],
 	post: function(url, matches) {
 		var postData = $('#form-quote').serialize();
