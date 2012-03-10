@@ -38,7 +38,7 @@ setlocale(LC_ALL, 'pl_PL.utf-8');
  * @link  http://kohanaframework.org/guide/using.autoloading
  * @link  http://php.net/spl_autoload_register
  */
-//spl_autoload_register(array('Kohana', 'auto_load'));
+spl_autoload_register(array('Kohana', 'auto_load'));
 
 /**
 * Optionally, you can enable a compatibility auto-loader for use with
@@ -46,9 +46,7 @@ setlocale(LC_ALL, 'pl_PL.utf-8');
 *
 * It is recommended to not enable this unless absolutely necessary.
 */
-spl_autoload_register(function ($class) {
-	return Kohana::auto_load($class) OR Kohana::auto_load_lowercase($class);
-});
+spl_autoload_register(array('Kohana', 'auto_load_lowercase'));
 
 /**
  * Enable the Kohana auto-loader for unserialization.
