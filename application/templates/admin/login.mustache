@@ -5,7 +5,10 @@
 	{{&security.csfr}}
 
 	{{#error.auth}}
-	<p class="alert-message error">{{error.auth}}</p>
+	<div class="alert alert-error fade in">
+		<a class="close" data-dismiss="alert" href="#">&times;</a>
+		{{error.auth}}
+	</div>
 	{{/error.auth}}
 
 	<div class="clearfix{{#error.auth-login}} error{{/error.auth-login}}">
