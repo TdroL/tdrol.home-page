@@ -26,4 +26,5 @@ return array(
 	'url'           => ':field must be a valid url',
 	// custom
 	'is_related'    => ':field must be chosen from available options',
+	'Security::check' => 'Invalid security token',
 );

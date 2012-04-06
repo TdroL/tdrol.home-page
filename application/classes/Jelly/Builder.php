@@ -2,7 +2,7 @@
 
 class Jelly_Builder extends Jelly_Core_Builder {
 
-	public function _apply_options(array $options = array())
+	public function apply_options(array $options = array())
 	{
 		if ($limit = Arr::get($options, 'limit'))
 		{

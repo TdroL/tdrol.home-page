@@ -1,5 +1,23 @@
 <h2>Quotes <small>delete</small></h2>
 
+<form action="{{url.current}}" method="post" accept-charset="utf-8" class="form-horizontal" enctype="multipart/form-data">
+	<input type="hidden" id="input-id" name="id" value="{{quote.id}}" />
+	<input type="hidden" name="csfr" value="{{security.token}}" />
+
+	<div class="control-group">
+		<span class="control-label">Body</span>
+		<div class="controls">
+			{{quote.body}}
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button class="btn btn-danger">Delete</button>
+		<a href="{{url.cancel}}" class="btn">Cancel</a>
+	</div>
+</form>
+
+<!--
 {{#form}}
 {{&open}}
 	<fieldset>
@@ -30,7 +48,7 @@
 	</fieldset>
 {{&close}}
 {{/form}}
-
+-->
 <!--
 {{&form.open}}
 	{{#has_errors}}

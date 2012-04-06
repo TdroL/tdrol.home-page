@@ -2,32 +2,26 @@
 
 class View_Admin_Links_Destroy extends View_Admin_Links {
 
-	public function form()
+	public function url()
 	{
-		$fomg = new Fomg($this->model);
+		return parent::url() + array(
+			'cancel' => Route::url('admin', array(
+				'controller' => 'links'
+			))
+		);
+	}
 
-		$url_cancel = Route::url('admin', array(
-			'controller' => 'links'
-		));
-
-		$fields = array('target', 'name', 'title', 'link', 'order', 'desc', 'tools');
-
-		$fomg->set('url.cancel', $url_cancel);
-		$fomg->set('errors', $this->error);
-		$fomg->set('allowed', $fields);
-		$fomg->set('plain', TRUE);
-
-		$fomg->set('class.form', 'form-horizontal');
-
-		return $fomg;
+	public function link()
+	{
+		return $this->model->as_array();
 	}
 
 	public function as_json(array $data = array())
 	{
-		$form = $this->form()->as_array(array('id', 'url', 'open', 'close', 'fields'));
+		$link = $this->link();
 
 		return parent::as_json(array(
-			'form' => $form
+			'link' => $link
 		) + $data);
 	}
 

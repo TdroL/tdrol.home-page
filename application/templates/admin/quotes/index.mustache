@@ -14,7 +14,7 @@
 <table id="quote-index" class="table">
 	<thead>
 		<tr>
-			<th>#</th>
+			<th class="column-optional">#</th>
 			<th>Body</th>
 			<th>Actions</th>
 		</tr>
@@ -22,11 +22,11 @@
 	<tbody>
 		{{#quotes}}
 		<tr>
-			<td>{{id}}</td>
-			<td title="{{body}}">{{body}}</td>
+			<td class="column-optional">{{id}}</td>
+			<td title="{{&body}}">{{&body}}</td>
 			<td>
-				<a href="{{urls.update}}" class="btn btn-update" data-label="Update"><span>Update</span></a>
-				<a href="{{urls.destroy}}" class="btn btn-delete" data-label="Delete"><span>Delete</span></a>
+				<a href="{{url.update}}" class="btn btn-action" data-label="Update"><span class="icon-edit">Update</span></a>
+				<a href="{{url.destroy}}" class="btn btn-action" data-label="Delete"><span class="icon-remove">Delete</span></a>
 			</td>
 		</tr>
 		{{/quotes}}

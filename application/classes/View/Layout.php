@@ -164,7 +164,7 @@ class View_Layout extends Kostache_Layout {
 	public function security()
 	{
 		return array(
-			'csfr' => Form::hidden('csfr', Security::token())
+			'token' => Security::token()
 		);
 	}
 

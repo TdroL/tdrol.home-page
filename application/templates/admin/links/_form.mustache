@@ -1,5 +1,4 @@
-{{#form}}
-{{&open}}
+<form action="{{url.current}}" method="post" accept-charset="utf-8" class="form-horizontal" enctype="multipart/form-data">
 	<fieldset>
 		{{#has_errors}}
 		<div class="alert alert-error fade in">
@@ -8,23 +7,72 @@
 		</div>
 		{{/has_errors}}
 
-		{{&field.id}}
+		<input type="hidden" id="input-id" name="id" value="{{link.id}}" />
+		<input type="hidden" name="csfr" value="{{security.token}}" />
 
-		{{#fields}}
-		<div class="control-group{{#error}} error{{/error}}">
-			{{&label}}
+		<div class="control-group{{#error.target}} error{{/error.target}}">
+			<label class="control-label" for="input-target">URL</label>
 			<div class="controls">
-				{{&input}}
-				<span class="help-inline">{{error}}</span>
+				<input type="url" name="target" required placeholder="http://" id="input-target" value="{{link.target}}" class="span4">
+				<span class="help-inline">{{error.target}}</span>
 			</div>
 		</div>
-		{{/fields}}
+
+		<div class="control-group{{#error.name}} error{{/error.name}}">
+			<label class="control-label" for="input-name">Name</label>
+			<div class="controls">
+				<input type="text" name="name" required id="input-name" value="{{link.name}}" class="span4">
+				<span class="help-inline">{{&error.name}}</span>
+			</div>
+		</div>
+
+		<div class="control-group{{#error.title}} error{{/error.title}}">
+			<label class="control-label" for="input-title">Title</label>
+			<div class="controls">
+				<input type="text" name="title" required id="input-title" value="{{link.title}}" class="span4">
+				<span class="help-inline">{{error.title}}</span>
+			</div>
+		</div>
+
+		<div class="control-group{{#error.parent}} error{{/error.parent}}">
+			<label class="control-label" for="input-parent">Parent link</label>
+			<div class="controls">
+				<select id="input-parent" name="parent" class="span4">
+					{{#links_tree}}
+					<option value="{{id}}"{{#is_selected}} selected{{/is_selected}}>{{&name}}</option>
+					{{/links_tree}}
+				</select>
+				<span class="help-inline">{{error.parent}}</span>
+			</div>
+		</div>
+
+		<div class="control-group{{#error.order}} error{{/error.order}}">
+			<label class="control-label" for="input-order">Order</label>
+			<div class="controls">
+				<input type="number" min="0" name="order" id="input-order" value="{{link.order}}" class="input-mini" data-links="{{links.json}}">
+				<span class="help-inline">{{error.order}}</span>
+			</div>
+		</div>
+
+		<div class="control-group{{#error.desc}} error{{/error.desc}}">
+			<label class="control-label" for="input-desc">Description</label>
+			<div class="controls">
+				<textarea name="desc" id="input-desc" cols="50" rows="3" class="span7">{{link.desc}}</textarea>
+				<span class="help-inline">{{error.desc}}</span>
+			</div>
+		</div>
+
+		<div class="control-group{{#error.tools}} error{{/error.tools}}">
+			<label class="control-label" for="input-tools">Tools</label>
+			<div class="controls">
+				<textarea name="tools" id="input-tools" cols="50" rows="3" class="span7">{{link.tools}}</textarea>
+				<span class="help-inline">{{error.tools}}</span>
+			</div>
+		</div>
 
 		<div class="form-actions">
 			<button class="btn btn-primary">Save</button>
 			<a href="{{url.cancel}}" class="btn">Cancel</a>
 		</div>
-
 	</fieldset>
-{{&close}}
-{{/form}}
+</form>

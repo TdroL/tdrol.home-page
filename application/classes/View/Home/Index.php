@@ -7,32 +7,32 @@ class View_Home_Index extends View_Home {
 	);
 
 	public $links;
-	protected $_links_tree;
-
-	public function render()
+	protected $_links_tree = FALSE;
+	protected function _load_links()
 	{
-		$links = $this->links->get_tree();
-		$this->_links_tree = $this->_prepare_links($links);
+		if ($this->_links_tree === FALSE)
+		{
+			$links = $this->links->get_tree();
+			$this->_links_tree = $this->_prepare_links($links);
+		}
 
-		return parent::render();
+		return $this->_links_tree;
 	}
 
 	public function links()
 	{
-		return $this->_links_tree;
+		return $this->_load_links();
 	}
 
 	public function has_links()
 	{
-		return ! empty($this->_links_tree);
+		return ! $this->_load_links();
 	}
 
-	protected function _prepare_links($links)
+	protected function _prepare_links(array $links)
 	{
-		foreach ($links as $id => $item)
+		foreach ($links as & $link)
 		{
-			$link = &$links[$id];
-
 			$link['has_links'] = FALSE;
 
 			if ( ! empty($link['links']))

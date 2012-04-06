@@ -9,6 +9,7 @@ return array(
 	),
 	'error' => array(
 		'not_implemented' => 'Not implemented',
-		'internal' => 'Internal error - bad things happened and we don\'t know why :('
+		'internal' => 'Internal error - bad things happened and we don\'t know why :(',
+		'invalid-token' => 'Invalid security token',
 	)
 );

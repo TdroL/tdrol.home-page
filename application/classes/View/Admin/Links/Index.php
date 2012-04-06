@@ -4,7 +4,7 @@ class View_Admin_Links_Index extends View_Admin_Links {
 
 	protected $params = array(
 		'order' => array(
-			'link' => 'asc',
+			'parent' => 'asc',
 			'order' => 'asc'
 		)
 	);

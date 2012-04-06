@@ -20,7 +20,7 @@ class Controller_Admin_Quotes extends Controller_Admin {
 			'controller' => 'quotes'
 		));
 
-		if ($this->valid_post())
+		if ($this->has_valid_post())
 		{
 			try
 			{
@@ -40,8 +40,11 @@ class Controller_Admin_Quotes extends Controller_Admin {
 			}
 			catch (Jelly_Validation_Exception $e)
 			{
+				$message = __(Kohana::message('common', 'validation.found_errors'));
+
 				$this->status(array(
 					'type' => 'fail',
+					'message' => $message,
 					'errors' => $e->errors('validation'),
 				));
 			}
@@ -71,7 +74,7 @@ class Controller_Admin_Quotes extends Controller_Admin {
 			return;
 		}
 
-		if ($this->valid_post())
+		if ($this->has_valid_post())
 		{
 			try
 			{
@@ -91,8 +94,11 @@ class Controller_Admin_Quotes extends Controller_Admin {
 			}
 			catch (Jelly_Validation_Exception $e)
 			{
+				$message = __(Kohana::message('common', 'validation.found_errors'));
+
 				$this->status(array(
 					'type' => 'fail',
+					'message' => $message,
 					'errors' => $e->errors('validation'),
 				));
 			}
@@ -122,7 +128,7 @@ class Controller_Admin_Quotes extends Controller_Admin {
 			return;
 		}
 
-		if ($this->valid_post())
+		if ($this->has_valid_post())
 		{
 			try
 			{
@@ -140,8 +146,11 @@ class Controller_Admin_Quotes extends Controller_Admin {
 			}
 			catch (Jelly_Validation_Exception $e)
 			{
+				$message = __(Kohana::message('common', 'validation.found_errors'));
+
 				$this->status(array(
 					'type' => 'fail',
+					'message' => $message,
 					'errors' => $e->errors('validation'),
 				));
 			}

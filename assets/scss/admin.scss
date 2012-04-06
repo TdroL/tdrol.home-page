@@ -44,36 +44,7 @@ body > div[role=main] {
   }
 }
 
-/* #Fixing bootstrap */
-
-input.btn {
-  vertical-align: top;
-  height: 28px;
-}
-
-button.btn {
-  vertical-align: top;
-}
-
-.input-xlarge,
-.input-xxlarge {
-  width: 100%;
-  display: block;
-  @include box-sizing(border-box);
-}
-
-input {
-  height: 18px + 4px*2;
-}
-
-.input-xlarge {
-  max-width: 270px;
-}
-
-.input-xxlarge {
-  max-width: 530px;
-}
-
+/* #Forms styling */
 input:invalid,
 select:invalid,
 textarea:invalid {
@@ -81,7 +52,7 @@ textarea:invalid {
   color: #b94a48;
 }
 
-/* /Fixing bootstrap */
+/* /Forms styling */
 
 .btn-create:before {
   display: inline-block;
@@ -92,7 +63,7 @@ textarea:invalid {
   background: url($icons-fff) -32px -128px no-repeat;
 }
 
-.btn-update, .btn-delete {
+.btn-action {
   position: relative;
   width: 16px;
   line-height: 16px;
@@ -128,13 +99,8 @@ textarea:invalid {
   }
 
   span {
-    display: block;
-    height: 16px;
-    width: 16px;
-    text-indent: 99999px;
-    overflow: hidden;
-    background-repeat: no-repeat;
-    background: url($icons-222);
+    border:0; font: 0/0 a; text-shadow: none; color: transparent; background-color: transparent;
+    margin: 1px;
   }
 }
 
@@ -151,15 +117,6 @@ textarea:invalid {
   }
 }
 
-
-.btn-update span {
-  background-position: -64px -112px;
-}
-
-.btn-delete span {
-  background-position: -176px -96px;
-}
-
 tr {
   @include transition(0.5s background);
   &[id]:target, &.target {
@@ -170,6 +127,16 @@ tr {
   td:last-of-type {
     text-align: center;
     word-spacing: -0.2em;
+  }
+
+  .column-optional {
+    display: none;
+  }
+
+  @media only screen and (min-width: 30em) {
+    .column-optional {
+      display: table-cell;
+    }
   }
 
   @media only screen and (min-width: 60em) {
@@ -232,18 +199,9 @@ ul.sortable {
   }
 }
 
-.form-horizontal .control-group > span.control-label {
-  float: left;
-  width: 140px;
-  padding-top: 5px;
-  text-align: right;
-  font-weight: bold;
-
-  + .controls {
-    padding-top: 5px;
-  }
+span.control-label + .controls {
+ padding-top: 5px;
 }
-
 
 .kohana {
   display: none;

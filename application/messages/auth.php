@@ -8,6 +8,7 @@ return array(
 
 	// errors
 	'auth-failed' => 'Invalid username or password',
+	'acl-failed'  => 'Credentials Required', //'Insufficient privileges',
 	'not_empty'   => ':field must not be empty',
 
 );

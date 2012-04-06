@@ -1,5 +1,70 @@
 <h2>Links <small>delete</small></h2>
 
+<form action="{{url.current}}" method="post" accept-charset="utf-8" class="form-horizontal" enctype="multipart/form-data">
+	<input type="hidden" id="input-id" name="id" value="{{link.id}}" />
+	<input type="hidden" name="csfr" value="{{security.token}}" />
+
+	<div class="control-group">
+		<span class="control-label">URL</span>
+		<div class="controls">
+			<a href="{{link.target}}">{{link.target}}</a>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<span class="control-label">Name</span>
+		<div class="controls">
+			{{link.name}}
+		</div>
+	</div>
+
+	<div class="control-group">
+		<span class="control-label">Title</span>
+		<div class="controls">
+			{{link.title}}
+		</div>
+	</div>
+
+	<div class="control-group">
+		<span class="control-label">Parent link</span>
+		<div class="controls">
+			{{#link.parent.id}}<a href="{{link.parent.target}}" title="{{link.parent.title}}">{{link.parent.name}}</a>{{/link.parent.id}}
+			{{^link.parent.id}}<em>Empty</em>{{/link.parent.id}}
+		</div>
+	</div>
+
+	<div class="control-group">
+		<span class="control-label">Order</span>
+		<div class="controls">
+			{{link.order}}
+		</div>
+	</div>
+
+	<div class="control-group">
+		<span class="control-label">Description</span>
+		<div class="controls">
+			{{link.desc}}
+			{{^link.desc}}<em>Empty</em>{{/link.desc}}
+		</div>
+	</div>
+
+	<div class="control-group">
+		<span class="control-label">Tools</span>
+		<div class="controls">
+			{{link.tools}}
+			{{^link.tools}}<em>Empty</em>{{/link.tools}}
+		</div>
+	</div>
+
+	<div class="form-actions">
+		<button class="btn btn-danger">Delete</button>
+		<a href="{{url.cancel}}" class="btn">Cancel</a>
+	</div>
+</form>
+
+<!--
+<h2>Links <small>delete</small></h2>
+
 {{#form}}
 {{&open}}
 	<fieldset>
@@ -30,6 +95,7 @@
 	</fieldset>
 {{&close}}
 {{/form}}
+-->
 
 <!--
 {{&form.open}}

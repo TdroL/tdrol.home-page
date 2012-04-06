@@ -17,23 +17,6 @@ class Controller_Base extends Controller {
 		$controller = $this->request->controller();
 		$action = $this->request->action();
 
-		//@EXPERIMENTAL
-		// Check, if any encrypted post data was sent
-		if ($encrypted = $this->request->post('__post-data__'))
-		{
-			$decrypted = unserialize(Encrypt::instance()->decode($encrypted));
-
-			// get all post data
-			$post = $this->request->post();
-
-			// remove encrypted post data
-			unset($post['__post-data__']);
-
-			// save current and encrypted post data
-			$this->request->post($post + $decrypted);
-		}
-		//#EXPERIMENTAL
-
 		// Set ACL:
 		// get list of all actions in current controller
 		$actions = array();
@@ -204,11 +187,11 @@ class Controller_Base extends Controller {
 	protected function permissions($acl, $resource)
 	{
 		// allow all - use only for public contents, overload for admin/protected contents
-		return $acl->allow('*');
+		$acl->allow('*');
 	}
 
-	// Helper method: checks if send post data is valid
-	protected function valid_post()
+	// Helper method: checks if send data has valid security token
+	protected function has_valid_post()
 	{
 		if ($this->request->method() == HTTP_Request::GET)
 			return FALSE;

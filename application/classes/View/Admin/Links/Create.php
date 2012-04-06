@@ -6,41 +6,122 @@ class View_Admin_Links_Create extends View_Admin_Links {
 		'form' => 'admin/links/_form'
 	);
 
-	public function form()
+	public function url()
 	{
-		$fomg = new Fomg($this->model);
+		return parent::url() + array(
+			'cancel' => Route::url('admin', array(
+				'controller' => 'links'
+			))
+		);
+	}
 
-		$url_cancel = Route::url('admin', array(
-			'controller' => 'links'
-		));
+	public function link()
+	{
+		return $this->model->as_array();
+	}
 
-		$fields = array('target', 'name', 'title', 'link', 'order', 'desc', 'tools');
+	public function links_tree()
+	{
+		$tree = Model::collection('link')
+			->ignore('id', $this->model->id)
+			->get_tree();
 
-		$fomg->set('url.cancel', $url_cancel);
-		$fomg->set('errors', $this->error);
-		$fomg->set('allowed', $fields);
+		$parent_id = $this->model->get('parent', TRUE);
 
-		$fomg->set('class.form', 'form-horizontal');
+		$options = array(
+			array(
+				'id' => 0,
+				'name' => '',
+				'is_selected' => ! $parent_id
+			)
+		);
 
-		$fomg->set('class.input:all', 'input-xlarge');
-		$fomg->set('class.input.order', 'input-mini');
-		$fomg->set('class.input.desc', 'input-xxlarge');
-		$fomg->set('class.input.tools', 'input-xxlarge');
+		$parse_tree = function (array $links, $level = 0) use ($parent_id, & $options, & $parse_tree)
+		{
+			$dash = '&nbsp;&#8627; ';
+			$tab = '&nbsp;&nbsp;&nbsp;';
 
-		$fomg->set('class.label:all', 'control-label');
+			foreach ($links as & $link)
+			{
+				if ($level > 0)
+				{
+					$link['name'] = str_repeat($tab, $level - 1)
+						.$dash
+						.$link['name'];
+				}
 
-		$fomg->set('attr.input.desc.rows', 3);
-		$fomg->set('attr.input.tools.rows', 3);
+				$options[] = array(
+					'id' => $link['id'],
+					'name' => $link['name'],
+					'is_selected' => $parent_id == $link['id']
+				);
 
-		return $fomg;
+				if ( ! empty($link['links']))
+				{
+					$parse_tree($link['links'], $level +1);
+				}
+			}
+
+			return $options;
+		};
+
+		return $parse_tree($tree);
+
+		foreach ($tree as & $node)
+		{
+			if ($this->model->id == $node['id'])
+			{
+				unset($node);
+				continue;
+			}
+
+			$options[] = array(
+				'id' => $node['id'],
+				'name' => $node['name'],
+				'is_selected' => ($node['id'] == $parent_id)
+			);
+
+			$options = array_merge($options, $this->_flatten_tree($node['links'], '&nbsp;&#8627; ', $this->model->id));
+		}
+
+		return $options;
 	}
 
 	public function as_json(array $data = array())
 	{
-		$form = $this->form()->as_array();
+		$link = $this->link();
 
 		return parent::as_json(array(
-			'form' => $form
+			'link' => $link
 		) + $data);
+	}
+
+	protected function _flatten_tree(array $tree, $tab = '&nbsp;&nbsp;&nbsp;', $ignore_id = NULL)
+	{
+		$options = array();
+
+		$parent_id = $this->model->get('parent', TRUE);
+
+		foreach ($tree as & $node)
+		{
+			if ($this->model->id == $node['id'])
+			{
+				unset($node);
+				continue;
+			}
+
+			$options[] = array(
+				'id' => $node['id'],
+				'name' => $tab.$node['name'],
+				'is_selected' => ($node['id'] == $parent_id)
+			);
+
+			if ( ! empty($node['links']))
+			{
+				$options = array_merge($options, $this->_flatten_tree($node['links'], '&nbsp;&nbsp;&nbsp;'.$tab, $ignore_id));
+			}
+		}
+
+		return $options;
 	}
 }

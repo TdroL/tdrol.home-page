@@ -14,7 +14,7 @@ class Controller_Admin extends Controller_Base {
 		//#EXPERIMENTAL
 
 		$login = $this->request->post('auth-login');
-		$password = $this->request->post('auth-password');
+		$password = $this->request->post('auth-pass');
 
 		$labels = Kohana::message('auth', 'labels');
 		$validation = Validation::factory($this->request->post())
@@ -23,13 +23,13 @@ class Controller_Admin extends Controller_Base {
 					__(Arr::get($labels, 'auth', 'auth')),
 				'auth-login' =>
 					__(Arr::get($labels, 'auth-login', 'auth-login')),
-				'auth-password' =>
-					__(Arr::get($labels, 'auth-password', 'auth-password'))
+				'auth-pass' =>
+					__(Arr::get($labels, 'auth-pass', 'auth-pass'))
 			))
 			->rules('auth-login', array(
 				array('not_empty', array(':value'))
 			))
-			->rules('auth-password', array(
+			->rules('auth-pass', array(
 				array('not_empty', array(':value'))
 			));
 

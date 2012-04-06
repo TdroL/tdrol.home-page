@@ -1,0 +1,34 @@
+<h2>Links <small>index</small></h2>
+
+<p>
+	<a href="{{url.create}}" class="btn btn-primary btn-create">Add new link</a>
+</p>
+
+<table id="links-index" class="table">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Name</th>
+			<th>Title</th>
+			<th>Parent</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#links}}
+		<tr id="link-{{id}}">
+			<td>{{id}}</td>
+			<td><a href="{{target}}">{{name}}</a></td>
+			<td title="{{title}}">{{title-short}}</td>
+			<td>
+				{{#link}}<a href="#link-{{id}}" title="{{name}} - {{title}}">#{{id}}</a>{{/link}}
+				{{^link}}--{{/link}}
+			</td>
+			<td>
+				<a href="{{url.update}}" class="btn btn-update" data-label="Update"><span>Update</span></a>
+				<a href="{{url.destroy}}" class="btn btn-delete" data-label="Delete"><span>Delete</span></a>
+			</td>
+		</tr>
+		{{/links}}
+	</tbody>
+</table>

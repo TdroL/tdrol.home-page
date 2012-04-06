@@ -2,6 +2,8 @@
 
 class View_Admin_Quotes_Index extends View_Admin_Quotes {
 
+	protected $params = array();
+
 	public $quotes;
 
 	public function quotes()
@@ -11,7 +13,7 @@ class View_Admin_Quotes_Index extends View_Admin_Quotes {
 		foreach ($items as & $item)
 		{
 			$item['body'] = strip_tags($item['body']);
-			$item['urls'] = array(
+			$item['url'] = array(
 				'update' => Route::url('admin', array(
 					'controller' => 'quotes',
 					'action'     => 'update',

@@ -64,6 +64,21 @@ ini_set('unserialize_callback_func', 'spl_autoload_call');
 I18n::lang('en');
 
 /**
+ * Simple function to combine I18n::get() and Kohana::message()
+ */
+function _t($id, $default = NULL)
+{
+	if ( ! strpos($id, '.')) // dot cannot be first character
+	{
+		return NULL;
+	}
+
+	list($file, $path) = explode('.', $id, 2);
+
+	return I18n::get(Kohana::message($file, $path, $default));
+}
+
+/**
  * Set Kohana::$environment if a 'KOHANA_ENV' environment variable has been supplied.
  *
  * Note: If you supply an invalid environment name, a PHP warning will be thrown
@@ -117,7 +132,6 @@ Kohana::modules(array(
 	'yaminify'        => MODPATH.'yaminify',        // Yaminify
 	'yaminify-assets' => MODPATH.'yaminify-assets', // Yaminify - Asset bridge
 	'assets'          => MODPATH.'assets',          // Asset
-	'fomg'            => MODPATH.'fomg',            // Fomg
 	// 'image'           => MODPATH.'image',           // Image manipulation
 	// 'userguide'       => MODPATH.'userguide',       // Userguide
 	// 'unittest'        => MODPATH.'unittest',        // Unit testing
@@ -184,6 +198,15 @@ if ( ! Route::cache())
 			'directory' => 'admin',
 			'controller' => 'links',
 			'action'     => 'index',
+		));
+
+	Route::set('rest', 'rest/<controller>(/<id>)(/<action>)', array(
+			'id' => '\d+',
+			'action' => '\w+'
+		))
+		->defaults(array(
+			'directory' => 'REST',
+			'action'     => '',
 		));
 
 	Route::set('default', '(<controller>(/<action>(/<id>)))')

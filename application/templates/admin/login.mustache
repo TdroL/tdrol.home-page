@@ -1,8 +1,14 @@
 <h2>Login</h2>
 
+{{#flash}}
+<div class="alert alert-{{type}}">
+	<a class="close" data-dismiss="alert" href="#">&times;</a>
+	{{message}}
+</div>
+{{/flash}}
+
 <form id="form-admin-login" action="{{url.current}}" method="post">
-	<input type="hidden" name="__post-data__" value="{{post_data}}" />
-	{{&security.csfr}}
+	<input type="hidden" name="csfr" value="{{security.token}}" />
 
 	{{#error.auth}}
 	<div class="alert alert-error fade in">
@@ -21,13 +27,13 @@
 		</div>
 	</div>
 
-	<div class="clearfix{{#error.auth-password}} error{{/error.auth-password}}">
-		<label for="auth-password">Password</label>
+	<div class="clearfix{{#error.auth-pass}} error{{/error.auth-pass}}">
+		<label for="auth-pass">Password</label>
 		<div class="input">
-			<input type="password" name="auth-password" id="auth-password" required />
-			{{#error.auth-password}}
-			<span class="help-inline">{{error.auth-password}}</span>
-			{{/error.auth-password}}
+			<input type="password" name="auth-pass" id="auth-pass" required />
+			{{#error.auth-pass}}
+			<span class="help-inline">{{error.auth-pass}}</span>
+			{{/error.auth-pass}}
 		</div>
 	</div>
 

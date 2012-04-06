@@ -4,25 +4,36 @@ class Model_Builder_Link extends Jelly_Builder {
 
 	public function get_all(array $options = array())
 	{
-		$this->with('link');
-		$this->_apply_options($options);
+		$this->with('parent');
+		$this->apply_options($options);
 
 		$result = array();
-		$fields = array('id', 'url', 'name', 'desc', 'tools', 'title', 'link_id', 'order');
+		$fields = array('id', 'target', 'name', 'desc', 'tools', 'title', 'parent', 'order');
+
 		foreach ($this->select() as $link)
 		{
 			$link_data = $link->as_array($fields);
-			$link_data['link'] = NULL;
+			$link_data['parent'] = NULL;
 
-			if ($link->link->loaded())
+			if ($link->parent->loaded())
 			{
-				$link_data['link'] = $link->link->as_array($fields);
+				$link_data['parent'] = $link->parent->as_array($fields);
 			}
 
 			$result[] = $link_data;
 		}
 
 		return $result;
+	}
+
+	public function ignore($field, $value)
+	{
+		if (is_null($value))
+		{
+			return $this->where($field, 'IS NOT', DB::expr('NULL'));
+		}
+
+		return $this->where($field, '!=', $value);
 	}
 
 	public function get_tree(array $fields = NULL, $non_parents = FALSE)
@@ -34,25 +45,27 @@ class Model_Builder_Link extends Jelly_Builder {
 
 		if ($fields === NULL)
 		{
-			$fields = array('id', 'url', 'name', 'desc', 'tools', 'title', 'link_id', 'order');
+			$fields = array('id', 'target', 'name', 'desc', 'tools', 'title', 'parent', 'order');
 		}
 
-		if ( ! in_array('link_id', $fields))
+		if ( ! in_array('parent', $fields))
 		{
-			$fields[] = 'link_id';
+			$fields[] = 'parent';
 		}
 
 		foreach ($collection as $link)
 		{
-			$links[$link->id] = $link->as_array($fields);
+			$links[$link->id] = $link->as_array($fields, TRUE);
 			$links[$link->id]['links'] = array();
 		}
 
 		foreach ($links as $id => $link)
 		{
-			if ( ! empty($link['link_id']) AND isset($links[$link['link_id']]))
+			$link_id = Arr::get($link, 'parent', 0);
+
+			if ( ! empty($link_id) AND isset($links[$link_id]))
 			{
-				$links[$link['link_id']]['links'][] = &$links[$id];
+				$links[$link_id]['links'][] = & $links[$id];
 			}
 		}
 
@@ -62,7 +75,7 @@ class Model_Builder_Link extends Jelly_Builder {
 
 			foreach ($links as $link)
 			{
-				if (empty($link['link_id']))
+				if (empty($link['parent']))
 				{
 					$parents[] = $link;
 				}

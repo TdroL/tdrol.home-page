@@ -33,6 +33,9 @@ class Model_Link extends Jelly_Model {
 			)),
 			'order'   => Jelly::field('integer', array(
 				'label' => 'Order',
+				'rules' > array(
+					array('digit')
+				)
 			)),
 			'desc'    => Jelly::field('text', array(
 				'label' => 'Description',
@@ -40,9 +43,11 @@ class Model_Link extends Jelly_Model {
 			'tools'   => Jelly::field('text', array(
 				'label' => 'Tools',
 			)),
-			'link_id' => Jelly::field('integer'),
-			'link'    => Jelly::field('belongsto', array(
+			//'link_id' => Jelly::field('integer'),
+			'parent'    => Jelly::field('belongsto', array(
 				'label'      => 'Parent link',
+				'foreign'    => 'link',
+				'column'     => 'link_id',
 				'allow_null' => TRUE,
 				'rules'      => array(
 					array(array(__CLASS__, 'is_related'), array(':value', ':field', ':model'))
@@ -53,15 +58,6 @@ class Model_Link extends Jelly_Model {
 				'delete_dependent' => TRUE,
 			)),
 		));
-	}
-
-	public function fields()
-	{
-		return array(
-			'target' => 'url',
-			'link'   => 'tree',
-			'order'  => 'order',
-		);
 	}
 
 	/* Validation helpers */

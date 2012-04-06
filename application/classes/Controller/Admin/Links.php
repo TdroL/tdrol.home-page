@@ -20,7 +20,7 @@ class Controller_Admin_Links extends Controller_Admin {
 			'controller' => 'links'
 		));
 
-		if ($this->valid_post())
+		if ($this->has_valid_post())
 		{
 			try
 			{
@@ -40,8 +40,11 @@ class Controller_Admin_Links extends Controller_Admin {
 			}
 			catch (Jelly_Validation_Exception $e)
 			{
+				$message = __(Kohana::message('common', 'validation.found_errors'));
+
 				$this->status(array(
 					'type' => 'fail',
+					'message' => $message,
 					'errors' => $e->errors('validation'),
 				));
 			}
@@ -71,7 +74,7 @@ class Controller_Admin_Links extends Controller_Admin {
 			return;
 		}
 
-		if ($this->valid_post())
+		if ($this->has_valid_post())
 		{
 			try
 			{
@@ -86,13 +89,18 @@ class Controller_Admin_Links extends Controller_Admin {
 				$this->status(array(
 					'type' => 'success',
 					'message' => $message,
-					'redirect_to' => $location
+					//'redirect_to' => $location
 				));
 			}
 			catch (Jelly_Validation_Exception $e)
 			{
+				$message = __(Kohana::message('common', 'validation.found_errors'));
+
+				echo Debug::vars($e->errors('validation'));
+
 				$this->status(array(
 					'type' => 'fail',
+					'message' => $message,
 					'errors' => $e->errors('validation'),
 				));
 			}
@@ -122,7 +130,7 @@ class Controller_Admin_Links extends Controller_Admin {
 			return;
 		}
 
-		if ($this->valid_post())
+		if ($this->has_valid_post())
 		{
 			try
 			{
@@ -140,8 +148,11 @@ class Controller_Admin_Links extends Controller_Admin {
 			}
 			catch (Jelly_Validation_Exception $e)
 			{
+				$message = __(Kohana::message('common', 'validation.found_errors'));
+
 				$this->status(array(
 					'type' => 'fail',
+					'message' => $message,
 					'errors' => $e->errors('validation'),
 				));
 			}
